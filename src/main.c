@@ -45,7 +45,8 @@ int main(void) {
     }
 
     descarregarCenario(&env);
-    
+    descarregarNave(&nave);
+
     CloseWindow();
     return 0;
 }

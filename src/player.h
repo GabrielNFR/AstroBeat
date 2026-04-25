@@ -6,10 +6,12 @@
 
 typedef struct {
     Vector3 posicao;
+    Model modelo;
 }Nave;
 
 void inicializarNave(Nave *jogador);
 void atualizarNave(Nave *jogador);
 void desenharNave(Nave *jogador);
+void descarregarNave(Nave *jogador);
 
 #endif
