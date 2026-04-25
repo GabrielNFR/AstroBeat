@@ -24,7 +24,7 @@ int main(void) {
 
         float deltaTime = GetFrameTime();
 
-        atualizarNave(&nave);
+        atualizarNave(&nave, deltaTime);
         atualizarCenario(&env, deltaTime);
         
         BeginDrawing();
