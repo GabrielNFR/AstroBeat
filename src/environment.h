@@ -9,7 +9,8 @@
 typedef struct Environment {
     Vector3 posicoes[QTD_ESTRELAS];
     float velocidade;
-    Texture2D texture;
+    Model sphere;
+    float rotacaoSphere;
 }Env;
 
 void inicializarCenario(Env *env);

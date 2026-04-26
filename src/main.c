@@ -30,8 +30,6 @@ int main(void) {
         BeginDrawing();
             ClearBackground(BLACK); 
 
-            desenharFundo(&env);
-
             BeginMode3D(camera);
 
                 desenharPistaEstrelas(&env);
