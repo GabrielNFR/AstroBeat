@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "globals.h"
 
-#define QTD_ESTRELAS 70
+#define QTD_ESTRELAS 100
 
 typedef struct Environment {
     Vector3 posicoes[QTD_ESTRELAS];
