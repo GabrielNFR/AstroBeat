@@ -1,9 +1,21 @@
 #include "environment.h"
+#include "raymath.h"
+#include "rlgl.h"
 
 void inicializarCenario(Env *env)
 {
     env->velocidade = 40.0f;
-    env->texture = LoadTexture("assets/nebulabg1.png");
+    env->rotacaoSphere = 0.0f;
+
+    Mesh sphereMesh = GenMeshSphere(500.0f, 64, 64);
+    env->sphere = LoadModelFromMesh(sphereMesh);
+    Texture2D texture = LoadTexture("assets/nebulabg1.png");
+
+    SetTextureFilter(texture, TEXTURE_FILTER_TRILINEAR);
+
+    env->sphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
+    env->sphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].color = WHITE;
+    rlDisableBackfaceCulling();
 
      for (int i = 0; i < QTD_ESTRELAS; i++) {
         do {
@@ -30,18 +42,19 @@ void atualizarCenario(Env *env, float deltaTime)
             } while (env->posicoes[i].x > -4.0f && env->posicoes[i].x < 4.0f && env->posicoes[i].y > -1.0f && env->posicoes[i].y < 5.0f);
         }
     }
-}
 
-void desenharFundo(Env *env)
-{
-    Rectangle sourceRec = {0.0f, 0.0f, (float)env->texture.width, (float)env->texture.height};
-    Rectangle destRec = {0.0f, 0.0f, (float)GetScreenWidth(), (float)GetScreenHeight()};
-    Vector2 origin = {0.0f, 0.0f};
-    DrawTexturePro(env->texture, sourceRec, destRec, origin, 0.0f, WHITE);
+    env->rotacaoSphere += 1.0f * deltaTime;
+    Matrix rotateBase = MatrixRotateX(90.0f * DEG2RAD);
+    Matrix rotateGiro = MatrixRotateZ(env->rotacaoSphere * DEG2RAD);
+    env->sphere.transform = MatrixMultiply(rotateBase, rotateGiro);
 }
 
 void desenharPistaEstrelas(Env *env)
 {
+    rlDisableBackfaceCulling();
+    DrawModel(env->sphere, (Vector3){0, 0, 0}, 1.0f, WHITE);
+    rlEnableBackfaceCulling();
+    
     for (int i = 0; i < QTD_ESTRELAS; i++) {
         DrawCube(env->posicoes[i], 0.1f, 0.1f, 1.0f, RAYWHITE); 
     }
@@ -61,5 +74,6 @@ void desenharPistaEstrelas(Env *env)
 
 void descarregarCenario(Env *env)
 {
-    UnloadTexture(env->texture);
+    UnloadTexture(env->sphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture);
+    UnloadModel(env->sphere);
 }
