@@ -2,17 +2,26 @@
 #include "globals.h"
 #include "player.h"
 #include "environment.h"
+#include "rlgl.h"
 
 int main(void) {
     InitWindow(800, 450, "AstroBeat");
     SetTargetFPS(60);
 
     Camera3D camera = {0};
-    camera.position = (Vector3){0.0f, 4.0f, 8.0f};
+    camera.position = (Vector3){0.0f, 5.0f, 8.0f};
     camera.target = (Vector3){0.0f, 0.0f, -10.0f};
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};
-    camera.fovy = 65.0f;
+    camera.fovy = 60.0f;
     camera.projection = CAMERA_PERSPECTIVE;
+
+    Camera3D cameraBG = {0};
+    cameraBG.position = (Vector3){0.0f, 0.0f, 0.0f};
+    cameraBG.target = (Vector3){0.0f, -5.0f, -18.0f};
+    cameraBG.up = (Vector3){0.0f, 1.0f, 0.0f};
+    cameraBG.fovy = 120.0f;
+    cameraBG.projection = CAMERA_PERSPECTIVE;
+
 
     Nave nave;
     inicializarNave(&nave);
@@ -29,6 +38,14 @@ int main(void) {
         
         BeginDrawing();
             ClearBackground(BLACK); 
+
+            BeginMode3D(cameraBG);
+
+                rlDisableDepthMask();
+                desenharFundo(&env);
+                rlEnableDepthMask();
+
+            EndMode3D();
 
             BeginMode3D(camera);
 
