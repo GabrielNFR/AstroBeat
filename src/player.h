@@ -18,6 +18,8 @@ typedef struct {
     Vector3 posicao;
     Model modelo;
     Particula particulas[MAX_PARTICULAS];
+    float alvoX;
+    float anguloRolamento;
 }Nave;
 
 void inicializarNave(Nave *jogador);

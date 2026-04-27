@@ -4,10 +4,9 @@
 void inicializarNave(Nave *jogador)
 {
     jogador->posicao = (Vector3){FAIXA_CENTRO, 0.5f, 0.0f};
-    // jogador->modelo = LoadModel("assets/InterstellarRunner.vox");
-    // jogador->modelo = LoadModel("assets/UltravioletIntruder.vox");
+    jogador->alvoX = FAIXA_CENTRO;
     jogador->modelo = LoadModel("assets/InfraredFurtive.vox");
-    // jogador->modelo = LoadModel("assets/Spaceship.glb");
+
 
     BoundingBox limites = GetModelBoundingBox(jogador->modelo);
     Vector3 centro = {
@@ -36,14 +35,24 @@ void inicializarNave(Nave *jogador)
 void atualizarNave(Nave *jogador, float deltaTime)
 {
     if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
-            if (jogador->posicao.x == FAIXA_CENTRO) jogador->posicao.x = FAIXA_ESQUERDA;
-            else if (jogador->posicao.x == FAIXA_DIREITA) jogador->posicao.x = FAIXA_CENTRO;
+            if (jogador->alvoX == FAIXA_CENTRO) jogador->alvoX = FAIXA_ESQUERDA;
+            else if (jogador->alvoX == FAIXA_DIREITA) jogador->alvoX = FAIXA_CENTRO;
         }
 
     if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
-        if (jogador->posicao.x == FAIXA_CENTRO) jogador->posicao.x = FAIXA_DIREITA;
-        else if (jogador->posicao.x == FAIXA_ESQUERDA) jogador->posicao.x = FAIXA_CENTRO;
+        if (jogador->alvoX == FAIXA_CENTRO) jogador->alvoX = FAIXA_DIREITA;
+        else if (jogador->alvoX == FAIXA_ESQUERDA) jogador->alvoX = FAIXA_CENTRO;
     }
+
+    jogador->posicao.x = Lerp(jogador->posicao.x, jogador->alvoX, 15.0f * deltaTime);
+
+    float direcaoMovimento = jogador->alvoX - jogador->posicao.x;
+    float alvoRolamento = direcaoMovimento * 8.0f;
+
+    jogador->anguloRolamento = Lerp(jogador->anguloRolamento, alvoRolamento, 10.0f * deltaTime);
+
+    float diferencaAbsoluta = fabs(jogador->alvoX - jogador->posicao.x);
+    jogador->posicao.y = 0.5f + (diferencaAbsoluta * 0.2f);
 
     // Envelhecer particulas existentes
     for (int i = 0; i < MAX_PARTICULAS; i++)
@@ -92,7 +101,8 @@ void atualizarNave(Nave *jogador, float deltaTime)
 
 void desenharNave(Nave *jogador)
 {
-    DrawModel(jogador->modelo, jogador->posicao, 1.0f, WHITE);
+    Vector3 eixoTorcaoZ = {0.0f, 0.0f, 1.0f};
+    DrawModelEx(jogador->modelo, jogador->posicao, eixoTorcaoZ, jogador->anguloRolamento, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
    
     // DrawCube(jogador->posicao, 1.0f, 1.0f, 1.0f, RED);
     // DrawCubeWires(jogador->posicao, 1.0f, 1.0f, 1.0f, MAROON); 
