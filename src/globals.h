@@ -5,4 +5,13 @@
 #define FAIXA_CENTRO 0.0f
 #define FAIXA_DIREITA 2.0f
 
+typedef enum {
+    MENU,
+    SONG_SELECT,
+    SETTINGS,
+    PLAYING,
+    QUIT
+} GameState;
+extern GameState gameState;
+
 #endif

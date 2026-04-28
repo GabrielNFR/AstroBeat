@@ -1,11 +1,15 @@
 #include "raylib.h"
 #include "globals.h"
+#include "menu.h"
 #include "player.h"
 #include "environment.h"
 #include "rlgl.h"
 
+GameState gameState = MENU;
+
 int main(void) {
     InitWindow(800, 450, "AstroBeat");
+    SetExitKey(0);
     SetTargetFPS(144);
 
     Camera3D camera = {0};
@@ -28,39 +32,73 @@ int main(void) {
     Env env;
     inicializarCenario(&env);
 
-    while (!WindowShouldClose()) {
+    while (true) {
+            if (WindowShouldClose() || gameState == QUIT) {
+                break;
+            }
 
-        float deltaTime = GetFrameTime();
+            float deltaTime = GetFrameTime();
 
-        atualizarNave(&nave, deltaTime);
-        atualizarCenario(&env, deltaTime);
-        
-        BeginDrawing();
-            ClearBackground(BLACK); 
+            switch (gameState) {
 
-            BeginMode3D(cameraBG);
+                case MENU:
+                    atualizarMenu(&gameState);
+                    break;
 
-                rlDisableDepthMask();
-                desenharFundo(&env);
-                rlEnableDepthMask();
+                case SONG_SELECT:
+                    atualizarSongSelect(&gameState);
+                    break;
 
-            EndMode3D();
+                case SETTINGS:
+                    atualizarSettings(&gameState);
+                    break;
 
-            BeginMode3D(camera);
+                case PLAYING:
+                    atualizarNave(&nave, deltaTime);
+                    atualizarCenario(&env, deltaTime);
+                    break;
 
-                desenharPistaEstrelas(&env);
-                desenharNave(&nave);
+                case QUIT:
+                    break;
+            }
 
-            EndMode3D();
+            if (gameState == QUIT) {
+                break;
+            }
 
-            DrawFPS(10, 10);
+            BeginDrawing();
+                ClearBackground(BLACK);
+                switch (gameState) {
+                    case MENU:
+                        desenharMenu();
+                        break;
 
-        EndDrawing();
+                    case SONG_SELECT:
+                        desenharSongSelect();
+                        break;
+
+                    case SETTINGS:
+                        desenharSettings();
+                        break;
+
+                    case PLAYING:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            desenharFundo(&env);
+                            rlEnableDepthMask();
+                        EndMode3D();
+                        BeginMode3D(camera);
+                            desenharPistaEstrelas(&env);
+                            desenharNave(&nave);
+                        EndMode3D();
+                        DrawFPS(10, 10);
+                        break;
+                }
+            EndDrawing();
+        }
+        descarregarCenario(&env);
+        descarregarNave(&nave);
+
+        CloseWindow();
+        return 0;
     }
-
-    descarregarCenario(&env);
-    descarregarNave(&nave);
-
-    CloseWindow();
-    return 0;
-}
