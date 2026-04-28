@@ -1,0 +1,13 @@
+*.o
+*.out
+*.exe
+AstroBeat
+
+bin/
+build/
+obj/
+
+.DS_Store
+Thumbs.db
+
+.vscode/
