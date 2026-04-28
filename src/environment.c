@@ -44,7 +44,7 @@ void atualizarCenario(Env *env, float deltaTime)
         }
     }
 
-    env->rotacaoSphere += 20.0f * deltaTime;
+    env->rotacaoSphere += 5.0f * deltaTime;
     Matrix rotateBase = MatrixRotateX(90.0f * DEG2RAD);
     Matrix rotateGiro = MatrixRotateZ(env->rotacaoSphere * DEG2RAD);
     env->sphere.transform = MatrixMultiply(rotateBase, rotateGiro);
@@ -67,7 +67,7 @@ void desenharPistaEstrelas(Env *env)
     int numSegmentos = 10;
     float larguraPista = 6.0f;
     
-    Color neon = (Color){0, 228, 255, 255};
+    Color neon = (Color){191, 0, 255, 255};
     Color basePista = (Color){15, 5, 25, 255}; 
 
     for (int i = 0; i < numSegmentos; i++) {

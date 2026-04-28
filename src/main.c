@@ -6,7 +6,7 @@
 
 int main(void) {
     InitWindow(800, 450, "AstroBeat");
-    SetTargetFPS(60);
+    SetTargetFPS(144);
 
     Camera3D camera = {0};
     camera.position = (Vector3){0.0f, 5.0f, 8.0f};
@@ -21,7 +21,6 @@ int main(void) {
     cameraBG.up = (Vector3){0.0f, 1.0f, 0.0f};
     cameraBG.fovy = 120.0f;
     cameraBG.projection = CAMERA_PERSPECTIVE;
-
 
     Nave nave;
     inicializarNave(&nave);
