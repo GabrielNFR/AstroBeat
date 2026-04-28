@@ -20,7 +20,7 @@ void inicializarCenario(Env *env)
         do {
             env->posicoes[i].x = (float)GetRandomValue(-20, 20);
             env->posicoes[i].y = (float)GetRandomValue(-5, 15);
-        } while (env->posicoes[i].x > -4.0f && env->posicoes[i].x < 4.0f && env->posicoes[i].y > -1.0f && env->posicoes[i].y < 5.0f);
+        } while (sqrt(env->posicoes[i].x * env->posicoes[i].x + (env->posicoes[i].y - 2.0f) * (env->posicoes[i].y - 2.0f)) < 5.0f);
 
         float espacamentoZ = 60.0f / QTD_ESTRELAS;
         env->posicoes[i].z = -50.0f + (i * espacamentoZ);
@@ -33,14 +33,12 @@ void atualizarCenario(Env *env, float deltaTime)
     for (int i = 0; i < QTD_ESTRELAS; i++) {
         env->posicoes[i].z += env->velocidade * deltaTime;
 
-        // Se a estrela passou da câmera (Z > 10), ela "renasce" lá no fundo (Z = -50)
         if (env->posicoes[i].z > 10.0f) {
             env->posicoes[i].z -= 60.0f;
-            // Sorteia nova posição horizontal e vertical para não ficar padronizado
             do {
             env->posicoes[i].x = (float)GetRandomValue(-20, 20);
             env->posicoes[i].y = (float)GetRandomValue(-5, 15);
-            } while (env->posicoes[i].x > -4.0f && env->posicoes[i].x < 4.0f && env->posicoes[i].y > -1.0f && env->posicoes[i].y < 5.0f);
+            } while (sqrt(env->posicoes[i].x * env->posicoes[i].x + (env->posicoes[i].y - 2.0f) * (env->posicoes[i].y - 2.0f)) < 5.0f);
         }
     }
 
