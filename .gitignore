@@ -2,6 +2,7 @@
 *.out
 *.exe
 AstroBeat
+astrobeat
 
 bin/
 build/
