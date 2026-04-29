@@ -43,14 +43,17 @@ int main(void) {
 
                 case MENU:
                     atualizarMenu(&gameState);
+                    atualizarFundoMenu(&env, deltaTime);
                     break;
 
                 case SONG_SELECT:
                     atualizarSongSelect(&gameState);
+                    atualizarFundoMenu(&env, deltaTime);
                     break;
 
                 case SETTINGS:
                     atualizarSettings(&gameState);
+                    atualizarFundoMenu(&env, deltaTime);
                     break;
 
                 case PLAYING:
@@ -64,6 +67,7 @@ int main(void) {
 
                 case PAUSED:
                     atualizarPause(&gameState);
+                    atualizarFundo(&env, deltaTime);
                     break;
 
                 case QUIT:
@@ -78,14 +82,30 @@ int main(void) {
                 ClearBackground(BLACK);
                 switch (gameState) {
                     case MENU:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            desenharFundoMenu(&env);
+                            rlEnableDepthMask();
+                        EndMode3D();
                         desenharMenu();
                         break;
 
+
                     case SONG_SELECT:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            desenharFundoMenu(&env);
+                            rlEnableDepthMask();
+                        EndMode3D();
                         desenharSongSelect();
                         break;
 
                     case SETTINGS:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            desenharFundoMenu(&env);
+                            rlEnableDepthMask();
+                        EndMode3D();
                         desenharSettings();
                         break;
 
