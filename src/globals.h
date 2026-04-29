@@ -10,6 +10,7 @@ typedef enum {
     SONG_SELECT,
     SETTINGS,
     PLAYING,
+    PAUSED,
     QUIT
 } GameState;
 extern GameState gameState;

@@ -7,9 +7,11 @@
 void atualizarMenu(GameState *state);
 void atualizarSongSelect(GameState *state);
 void atualizarSettings(GameState *state);
+void atualizarPause(GameState *state);
 
 void desenharMenu(void);
 void desenharSongSelect(void);
 void desenharSettings(void);
+void desenharPause(void);
 
 #endif

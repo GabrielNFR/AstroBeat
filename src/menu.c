@@ -89,3 +89,29 @@ void desenharSettings(void) {
     DrawText("Em breve...", screenWidth/2 - MeasureText("Em breve...", 20)/2, screenHeight/2, 20, RAYWHITE);
     DrawText("ESC para voltar", screenWidth/2 - MeasureText("ESC para voltar", 16)/2, screenHeight*3/4, 16, Fade(RAYWHITE, 0.7f));
 }
+
+// pause
+void atualizarPause(GameState *state) {
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        *state = PLAYING;
+    }
+
+    if (IsKeyPressed(KEY_ENTER)) {
+        *state = MENU;
+    }
+
+    if (IsKeyPressed(KEY_Q)) {
+        *state = QUIT;
+    }
+}
+
+void desenharPause(void) {
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+
+    DrawText("PAUSADO", screenWidth/2 - MeasureText("PAUSADO", 40)/2, screenHeight/3, 40, MAGENTA);
+    DrawText("ESC - continuar", screenWidth/2 - MeasureText("ESC - continuar", 20)/2, screenHeight/2, 20, RAYWHITE);
+    DrawText("ENTER - voltar ao menu", screenWidth/2 - MeasureText("ENTER - voltar ao menu", 20)/2, screenHeight/2 + 30, 20, RAYWHITE);
+    DrawText("Q - sair", screenWidth/2 - MeasureText("Q - sair", 20)/2, screenHeight/2 + 60, 20, RAYWHITE);
+
+}

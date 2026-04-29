@@ -54,8 +54,16 @@ int main(void) {
                     break;
 
                 case PLAYING:
-                    atualizarNave(&nave, deltaTime);
-                    atualizarCenario(&env, deltaTime);
+                    if (IsKeyPressed(KEY_ESCAPE)) {
+                        gameState = PAUSED;
+                    } else {
+                        atualizarNave(&nave, deltaTime);
+                        atualizarCenario(&env, deltaTime);
+                    }
+                    break;
+
+                case PAUSED:
+                    atualizarPause(&gameState);
                     break;
 
                 case QUIT:
@@ -87,11 +95,28 @@ int main(void) {
                             desenharFundo(&env);
                             rlEnableDepthMask();
                         EndMode3D();
+
                         BeginMode3D(camera);
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
                         EndMode3D();
+
                         DrawFPS(10, 10);
+                        break;
+
+                    case PAUSED:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            desenharFundo(&env);
+                            rlEnableDepthMask();
+                        EndMode3D();
+
+                        BeginMode3D(camera);
+                            desenharPistaEstrelas(&env);
+                            desenharNave(&nave);
+                        EndMode3D();
+
+                        desenharPause();
                         break;
                 }
             EndDrawing();
