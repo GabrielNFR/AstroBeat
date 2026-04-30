@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "player.h"
 #include "environment.h"
+#include "notas.h"
 #include "rlgl.h"
 
 GameState gameState = MENU;
@@ -32,12 +33,17 @@ int main(void) {
     Env env;
     inicializarCenario(&env);
 
+    leitura_arquivo_musica();
+    
+    float tempo_inicio = GetTime();
     while (true) {
             if (WindowShouldClose() || gameState == QUIT) {
                 break;
             }
 
             float deltaTime = GetFrameTime();
+            //gettime será substituido por getmusictimeplayed quando houver musica
+            float tempo_atual = GetTime() - tempo_inicio;
 
             switch (gameState) {
 
@@ -54,16 +60,10 @@ int main(void) {
                     break;
 
                 case PLAYING:
-                    if (IsKeyPressed(KEY_ESCAPE)) {
-                        gameState = PAUSED;
-                    } else {
-                        atualizarNave(&nave, deltaTime);
-                        atualizarCenario(&env, deltaTime);
-                    }
-                    break;
+                    atualizarNave(&nave, deltaTime);
+                    atualizarCenario(&env, deltaTime);
+                    atualizar_notas(tempo_atual);
 
-                case PAUSED:
-                    atualizarPause(&gameState);
                     break;
 
                 case QUIT:
@@ -90,40 +90,28 @@ int main(void) {
                         break;
 
                     case PLAYING:
-                        BeginMode3D(cameraBG);
-                            rlDisableDepthMask();
+                        BeginMode3D(camera);
+                            rlDisableDepthTest();
                             desenharFundo(&env);
-                            rlEnableDepthMask();
+                            rlEnableDepthTest();
                         EndMode3D();
-
                         BeginMode3D(camera);
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
+                            desenhar_notas(tempo_atual);
                         EndMode3D();
-
                         DrawFPS(10, 10);
-                        break;
-
-                    case PAUSED:
-                        BeginMode3D(cameraBG);
-                            rlDisableDepthMask();
-                            desenharFundo(&env);
-                            rlEnableDepthMask();
-                        EndMode3D();
-
-                        BeginMode3D(camera);
-                            desenharPistaEstrelas(&env);
-                            desenharNave(&nave);
-                        EndMode3D();
-
-                        desenharPause();
                         break;
                 }
             EndDrawing();
         }
+
         descarregarCenario(&env);
         descarregarNave(&nave);
-
+    
         CloseWindow();
         return 0;
     }
+
+    
+
