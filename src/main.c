@@ -67,6 +67,9 @@ int main(void) {
                     atualizarCenario(&env, deltaTime);
                     atualizar_notas(tempo_atual);
 
+                case PAUSED:
+                    atualizarPause(&gameState);
+                    atualizarFundo(&env, deltaTime);
                     break;
 
                 case QUIT:
