@@ -8,6 +8,6 @@ O jogador pilota uma nave espacial através de uma pista neon intergaláctica di
 
 ## Créditos 
 
-Um agradecimento especial aos criador do modelo da nave utilizado neste projeto:
+Um agradecimento especial ao criador do modelo da nave utilizado neste projeto:
 
 * **Modelo da Nave (Voxel):** [Voxel Spaceships](https://maxparata.itch.io/voxel-spaceships) por **Max Parata**.
