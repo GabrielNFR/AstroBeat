@@ -63,11 +63,22 @@ int main(void) {
                     break;
 
                 case PLAYING:
+                     if (IsKeyPressed(KEY_ESCAPE)) {
+                        gameState = PAUSED;
+                    } else {
+                        atualizarNave(&nave, deltaTime);
+                        atualizarCenario(&env, deltaTime);
+                    }
+                    break;
+
                     atualizarNave(&nave, deltaTime);
                     atualizarCenario(&env, deltaTime);
                     atualizar_notas(tempo_atual);
 
                 case PAUSED:
+                    atualizarPause(&gameState);
+                    break;
+                    
                     atualizarPause(&gameState);
                     atualizarFundo(&env, deltaTime);
                     break;
@@ -122,6 +133,25 @@ int main(void) {
                             desenharNave(&nave);
                             desenhar_notas(tempo_atual);
                         EndMode3D();
+                        DrawFPS(10, 10);
+                        break;
+
+                     case PAUSED:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            rlDisableDepthTest();
+                            desenharFundo(&env);
+                            rlEnableDepthMask();
+                            rlEnableDepthTest();
+                        EndMode3D();
+
+                        BeginMode3D(camera);
+                            desenharPistaEstrelas(&env);
+                            desenharNave(&nave);
+                            desenhar_notas(tempo_atual);
+                        EndMode3D();
+
+                        desenharPause();
                         DrawFPS(10, 10);
                         break;
                 }

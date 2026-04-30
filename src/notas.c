@@ -7,7 +7,7 @@ int total_de_notas;
 void leitura_arquivo_musica(){
     int i= 0;
 
-    FILE *f = fopen("assets/notas_teste.txt", "r");
+    FILE *f = fopen("mapas/mapaElektronomia.txt", "r");
     if (f==NULL){
         printf("erro ao abrir o arquivo");
         return;

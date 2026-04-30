@@ -25,7 +25,7 @@ void inicializarCenario(Env *env)
     env->menuSphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].color = WHITE;
 
     rlDisableBackfaceCulling();
-
+    
      for (int i = 0; i < QTD_ESTRELAS; i++) {
         do {
             env->posicoes[i].x = (float)GetRandomValue(-20, 20);
@@ -37,6 +37,7 @@ void inicializarCenario(Env *env)
         env->posicoes[i].z += (float)GetRandomValue(-10, 10) / 10.0f;
     }
 }
+
 
 void atualizarCenario(Env *env, float deltaTime)
 {
