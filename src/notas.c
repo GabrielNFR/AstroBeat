@@ -53,7 +53,6 @@ void desenhar_notas(float tempo_atual){
             if (z < 15.0f && z > -20.0f){
                 DrawCube((Vector3){x, 0.5f, z}, 0.5f, 0.5f, 0.5f, RED);
             }
-            
         }
 
 

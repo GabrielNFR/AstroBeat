@@ -36,15 +36,15 @@ int main(void) {
     leitura_arquivo_musica();
     
     float tempo_inicio = GetTime();
+    float tempo_jogo = 0.0f;
     while (true) {
             if (WindowShouldClose() || gameState == QUIT) {
                 break;
             }
-
+    
             float deltaTime = GetFrameTime();
             //gettime será substituido por getmusictimeplayed quando houver musica
             float tempo_atual = GetTime() - tempo_inicio;
-
             switch (gameState) {
 
                 case MENU:
@@ -68,19 +68,12 @@ int main(void) {
                     } else {
                         atualizarNave(&nave, deltaTime);
                         atualizarCenario(&env, deltaTime);
+                        atualizar_notas(tempo_jogo);
                     }
                     break;
 
-                    atualizarNave(&nave, deltaTime);
-                    atualizarCenario(&env, deltaTime);
-                    atualizar_notas(tempo_atual);
-
                 case PAUSED:
                     atualizarPause(&gameState);
-                    break;
-                    
-                    atualizarPause(&gameState);
-                    atualizarFundo(&env, deltaTime);
                     break;
 
                 case QUIT:
@@ -89,6 +82,9 @@ int main(void) {
 
             if (gameState == QUIT) {
                 break;
+            }
+            if (gameState == PLAYING) {
+                tempo_jogo += deltaTime;
             }
 
             BeginDrawing();
@@ -131,24 +127,20 @@ int main(void) {
                         BeginMode3D(camera);
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
-                            desenhar_notas(tempo_atual);
+                            desenhar_notas(tempo_jogo);
                         EndMode3D();
                         DrawFPS(10, 10);
                         break;
 
                      case PAUSED:
-                        BeginMode3D(cameraBG);
-                            rlDisableDepthMask();
+                        BeginMode3D(camera);
                             rlDisableDepthTest();
                             desenharFundo(&env);
-                            rlEnableDepthMask();
                             rlEnableDepthTest();
-                        EndMode3D();
 
-                        BeginMode3D(camera);
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
-                            desenhar_notas(tempo_atual);
+                            desenhar_notas(tempo_jogo); 
                         EndMode3D();
 
                         desenharPause();
@@ -164,6 +156,7 @@ int main(void) {
         CloseWindow();
         return 0;
     }
+
 
     
 
