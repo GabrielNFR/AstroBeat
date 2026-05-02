@@ -118,7 +118,4 @@ void descarregarCenario(Env *env)
 {
     UnloadTexture(env->sphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture);
     UnloadModel(env->sphere);
-
-    UnloadTexture(env->menuSphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture);
-    UnloadModel(env->menuSphere);
 }

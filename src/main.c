@@ -119,7 +119,7 @@ int main(void) {
                         break;
 
                     case PLAYING:
-                        BeginMode3D(camera);
+                        BeginMode3D(cameraBG);
                             rlDisableDepthTest();
                             desenharFundo(&env);
                             rlEnableDepthTest();
@@ -133,16 +133,17 @@ int main(void) {
                         break;
 
                      case PAUSED:
-                        BeginMode3D(camera);
+                        BeginMode3D(cameraBG);
                             rlDisableDepthTest();
                             desenharFundo(&env);
                             rlEnableDepthTest();
-
+                        EndMode3D();
+                        BeginMode3D(camera);
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
-                            desenhar_notas(tempo_jogo); 
+                            desenhar_notas(tempo_jogo);
                         EndMode3D();
-
+                        
                         desenharPause();
                         DrawFPS(10, 10);
                         break;
