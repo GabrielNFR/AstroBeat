@@ -50,7 +50,7 @@ void desenhar_notas(float tempo_atual){
             float z = -80.0f + (tempo_atual - array_notas[i].tempo) * velocidade;
     
             // só desenha se estiver na tela
-            if (z < 15.0f && z > -20.0f){
+            if (z < 15.0f && z > -80.0f){
                 DrawCube((Vector3){x, 0.5f, z}, 0.5f, 0.5f, 0.5f, RED);
             }
         }

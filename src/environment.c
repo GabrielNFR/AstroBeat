@@ -17,7 +17,7 @@ void inicializarCenario(Env *env)
     env->sphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].color = WHITE;
 
     Mesh menuSphereMesh = GenMeshSphere(500.0f, 64, 64);
-    env->menuSphere = LoadModelFromMesh(sphereMesh);
+    env->menuSphere = LoadModelFromMesh(menuSphereMesh);
     Texture2D menuTexture = LoadTexture("assets/nebulamenu.png");
     SetTextureFilter(menuTexture, TEXTURE_FILTER_TRILINEAR);
 
@@ -118,4 +118,7 @@ void descarregarCenario(Env *env)
 {
     UnloadTexture(env->sphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture);
     UnloadModel(env->sphere);
+
+    UnloadTexture(env->menuSphere.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture);
+    UnloadModel(env->menuSphere);
 }
