@@ -16,6 +16,7 @@ typedef struct {
 
 typedef struct {
     Vector3 posicao;
+    BoundingBox hitbox;
     Model modelo;
     Particula particulas[MAX_PARTICULAS];
     float alvoX;

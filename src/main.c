@@ -69,6 +69,7 @@ int main(void) {
                         atualizarNave(&nave, deltaTime);
                         atualizarCenario(&env, deltaTime);
                         atualizar_notas(tempo_jogo);
+                        verificarAcertos(&nave, tempo_jogo);
                     }
                     break;
 

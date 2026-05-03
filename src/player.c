@@ -54,6 +54,11 @@ void atualizarNave(Nave *jogador, float deltaTime)
     float diferencaAbsoluta = fabs(jogador->alvoX - jogador->posicao.x);
     jogador->posicao.y = 0.5f + (diferencaAbsoluta * 0.2f);
 
+    jogador->hitbox = (BoundingBox){
+        {jogador->posicao.x - 0.4f, jogador->posicao.y - 0.3f, jogador->posicao.z - 0.4f}, 
+        {jogador->posicao.x + 0.4f, jogador->posicao.y + 0.3f, jogador->posicao.z + 0.4f} 
+    };
+
     // Envelhecer particulas existentes
     for (int i = 0; i < MAX_PARTICULAS; i++)
     {
