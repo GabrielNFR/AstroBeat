@@ -1,8 +1,30 @@
 #include "raylib.h"
 #include "notas.h"
 #include <stdio.h>
+#include <math.h>
+
 Notas array_notas[1000];
 int total_de_notas;
+
+static bool TeclaPressionadaParaTipo(Tiponota tipo)
+{
+    switch (tipo) {
+        case NOTA_GRAVE:    return IsKeyPressed(KEY_K);
+        case NOTA_AGUDO:    return IsKeyPressed(KEY_J);
+        case NOTA_DIREITA:  return IsKeyPressed(KEY_D);
+        case NOTA_ESQUERDA: return IsKeyPressed(KEY_A);
+        case NOTA_LONGA:    return IsKeyPressed(KEY_SPACE);
+        default:            return false;
+    }
+}
+
+static bool TeclaSeguradaParaTipo(Tiponota tipo)
+{
+    switch (tipo) {
+        case NOTA_LONGA: return IsKeyDown(KEY_SPACE);
+        default:         return false;
+    }
+}
 
 void leitura_arquivo_musica(){
     int i= 0;
@@ -16,7 +38,8 @@ void leitura_arquivo_musica(){
     
     while(i < 1000 && fscanf(f,"%f %d %d %f",&array_notas[i].tempo, &array_notas[i].lane, (int*)&array_notas[i].tipo, &array_notas[i].duracao)==4){
         array_notas[i].ativa=0;
-        array_notas[i].isHit=0;
+        array_notas[i].finalizada=0;
+        array_notas[i].resultado = JULG_PENDENTE;
         array_notas[i].pontos=100;
         printf("Nota %d: tempo=%.2f lane=%d tipo=%d dur=%.2f\n\n",
        i,
@@ -44,7 +67,7 @@ void desenhar_notas(float tempo_atual){
     float posX[3] = {FAIXA_ESQUERDA, FAIXA_CENTRO, FAIXA_DIREITA};
     for (int i = 0; i < total_de_notas; i++) {
     if (array_notas[i].lane < 0 || array_notas[i].lane > 2) continue;
-    if (!array_notas[i].ativa || array_notas[i].isHit) continue;
+    if (!array_notas[i].ativa || array_notas[i].finalizada) continue;
 
     float x = posX[array_notas[i].lane];
     float z = -80.0f + (tempo_atual - array_notas[i].tempo) * VEL_NOTAS;
@@ -82,57 +105,64 @@ void desenhar_notas(float tempo_atual){
     }
 }
 
-void verificarAcertos(Nave *jogador, float tempo_atual)
+void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
 {
-    float posX[3] = {FAIXA_ESQUERDA, FAIXA_CENTRO, FAIXA_DIREITA};
-    
     for (int i = 0; i < total_de_notas; i++)
     {
-        if (!array_notas[i].ativa || array_notas[i].isHit) continue;
-
-        float x = posX[array_notas[i].lane];
-        float z = -80.0f + (tempo_atual - array_notas[i].tempo) * VEL_NOTAS;
-
-        BoundingBox notaBox;
-        if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].duracao > 0.0f)
+        if (!array_notas[i].ativa || array_notas[i].finalizada)
         {
-            float zBody = array_notas[i].duracao * VEL_NOTAS;
-            notaBox = (BoundingBox){
-                {x - 0.25f, 0.25f, z - zBody + 0.25f}, 
-                {x + 0.25f, 0.75f, z + 0.25f}
-            };
-        } else {
-            notaBox = (BoundingBox){
-                {x - 0.25f, 0.25f, z - 0.25f},
-                {x + 0.25f, 0.75f, z + 0.25f}
-            };
+            continue;
+        }
+        float tempo_hit_ideal = array_notas[i].tempo + TEMPO_ATE_HIT;
+        float diferenca_tempo = tempo_atual - tempo_hit_ideal;
+        float diferenca_absoluta = fabsf(diferenca_tempo);
+
+        float z_nota = -80.0f + (tempo_atual - array_notas[i].tempo) * VEL_NOTAS;
+        if (z_nota >= 15.0f && array_notas[i].tipo != NOTA_LONGA)
+        {
+            array_notas[i].finalizada = 1;
+            array_notas[i].resultado = JULG_MISS;
+            printf("MISS (saiu da tela)\n");
+            fflush(stdout);
+            continue;
         }
 
-        if (!CheckCollisionBoxes(jogador->hitbox, notaBox)) continue;
+        if (diferenca_absoluta <= JANELA_MISS)
+        {
+            if (array_notas[i].tipo != NOTA_LONGA) 
+            {
+                if (TeclaPressionadaParaTipo(array_notas[i].tipo))
+                {
+                    array_notas[i].finalizada = 1;
 
-        int acertou = 0;
-        switch (array_notas[i].tipo) {
-            case NOTA_GRAVE:
-                acertou = IsKeyPressed(KEY_K);
-                break;
-            case NOTA_AGUDO:
-                acertou = IsKeyPressed(KEY_J);
-                break;
-            case NOTA_LONGA:
-                acertou = IsKeyPressed(KEY_SPACE);
-                break;
-            case NOTA_DIREITA:
-                acertou = IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT);
-                break;
-            case NOTA_ESQUERDA:
-                acertou = IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT);
-                break;
-        }
-
-        if (acertou) {
-            array_notas[i].isHit = 1;
-            printf("Acertou nota %d! tipo=%d lane=%d\n", i, array_notas[i].tipo, array_notas[i].lane);
-        }
+                    if (diferenca_absoluta <= JANELA_PERFECT)
+                    {
+                        array_notas[i].resultado = JULG_PERFECT;
+                        printf("PERFECT\n");
+                    }
+                    else if (diferenca_absoluta <= JANELA_GREAT)
+                    {
+                        array_notas[i].resultado = JULG_GREAT;
+                        printf("GREAT\n");
+                    }
+                    else if (diferenca_absoluta <= JANELA_GOOD)
+                    {
+                        array_notas[i].resultado = JULG_GOOD;
+                        printf("GOOD\n");
+                    }
+                    else if (diferenca_absoluta <= JANELA_OK)
+                    {
+                        array_notas[i].resultado = JULG_OK;
+                        printf("OK\n");
+                    }
+                    fflush(stdout);        
+                }
+            }
+            else
+            {
+                
+            }
+        }  
     }
 }
 
