@@ -5,6 +5,7 @@
 #include "environment.h"
 #include "notas.h"
 #include "rlgl.h"
+#include "audio.h"
 
 GameState gameState = MENU;
 
@@ -34,17 +35,24 @@ int main(void) {
     inicializarCenario(&env);
 
     leitura_arquivo_musica();
-    
-    float tempo_inicio = GetTime();
+    Audio audio;
+    inicializarAudio(&audio, "songs/Elektronomia.ogg");
+
     float tempo_jogo = 0.0f;
     while (true) {
             if (WindowShouldClose() || gameState == QUIT) {
                 break;
             }
-    
+
             float deltaTime = GetFrameTime();
-            //gettime será substituido por getmusictimeplayed quando houver musica
-            float tempo_atual = GetTime() - tempo_inicio;
+            GameState estadoAnterior = gameState;
+
+            atualizarAudio(&audio);
+
+            if (gameState == PLAYING || gameState == PAUSED) {
+                tempo_jogo = obterTempoMusica(&audio);
+            }
+
             switch (gameState) {
 
                 case MENU:
@@ -81,11 +89,30 @@ int main(void) {
                     break;
             }
 
+            if (estadoAnterior != gameState) {
+                if (estadoAnterior == SONG_SELECT && gameState == PLAYING) {
+                    resetar_notas();
+                    iniciarMusica(&audio);
+                    tempo_jogo = 0.0f;
+                }
+
+                if (estadoAnterior == PLAYING && gameState == PAUSED) {
+                    pausarMusica(&audio);
+                }
+
+                if (estadoAnterior == PAUSED && gameState == PLAYING) {
+                    continuarMusica(&audio);
+                }
+
+                if ((estadoAnterior == PLAYING || estadoAnterior == PAUSED) &&
+                    (gameState == MENU || gameState == QUIT)) {
+                    pararMusica(&audio);
+                    tempo_jogo = 0.0f;
+                }
+            }
+
             if (gameState == QUIT) {
                 break;
-            }
-            if (gameState == PLAYING) {
-                tempo_jogo += deltaTime;
             }
 
             BeginDrawing();
@@ -144,7 +171,7 @@ int main(void) {
                             desenharNave(&nave);
                             desenhar_notas(tempo_jogo);
                         EndMode3D();
-                        
+
                         desenharPause();
                         DrawFPS(10, 10);
                         break;
@@ -154,11 +181,8 @@ int main(void) {
 
         descarregarCenario(&env);
         descarregarNave(&nave);
-    
+        descarregarAudio(&audio);
+
         CloseWindow();
         return 0;
     }
-
-
-    
-

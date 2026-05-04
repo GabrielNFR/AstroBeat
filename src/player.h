@@ -21,6 +21,8 @@ typedef struct {
     Particula particulas[MAX_PARTICULAS];
     float alvoX;
     float anguloRolamento;
+    float laneAtual;
+    float laneAnterior;
 }Nave;
 
 void inicializarNave(Nave *jogador);

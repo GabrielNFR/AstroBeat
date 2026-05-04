@@ -6,7 +6,8 @@ void inicializarNave(Nave *jogador)
     jogador->posicao = (Vector3){FAIXA_CENTRO, 0.5f, 0.0f};
     jogador->alvoX = FAIXA_CENTRO;
     jogador->modelo = LoadModel("assets/InfraredFurtive.vox");
-
+    jogador->laneAtual = 1;
+    jogador->laneAnterior = 1;
 
     BoundingBox limites = GetModelBoundingBox(jogador->modelo);
     Vector3 centro = {
@@ -34,6 +35,8 @@ void inicializarNave(Nave *jogador)
 
 void atualizarNave(Nave *jogador, float deltaTime)
 {
+    jogador->laneAnterior = jogador->laneAtual;
+
     if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
             if (jogador->alvoX == FAIXA_CENTRO) jogador->alvoX = FAIXA_ESQUERDA;
             else if (jogador->alvoX == FAIXA_DIREITA) jogador->alvoX = FAIXA_CENTRO;
@@ -58,6 +61,19 @@ void atualizarNave(Nave *jogador, float deltaTime)
         {jogador->posicao.x - 0.4f, jogador->posicao.y - 0.3f, jogador->posicao.z - 0.4f}, 
         {jogador->posicao.x + 0.4f, jogador->posicao.y + 0.3f, jogador->posicao.z + 0.4f} 
     };
+
+    if (jogador->alvoX == FAIXA_ESQUERDA)
+    {
+        jogador->laneAtual = 0;
+    }
+    else if (jogador->alvoX == FAIXA_CENTRO)
+    {
+        jogador->laneAtual = 1;
+    }
+    else
+    {
+        jogador->laneAtual = 2;
+    }
 
     // Envelhecer particulas existentes
     for (int i = 0; i < MAX_PARTICULAS; i++)
