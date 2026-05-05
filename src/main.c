@@ -6,6 +6,7 @@
 #include "notas.h"
 #include "rlgl.h"
 #include "audio.h"
+#include <stdio.h>
 
 GameState gameState = MENU;
 
@@ -74,6 +75,13 @@ int main(void) {
                      if (IsKeyPressed(KEY_ESCAPE)) {
                         gameState = PAUSED;
                     } else {
+                        // DEBUG: skip na música
+                        if (IsKeyPressed(KEY_F)) {
+                            float t = obterTempoMusica(&audio);
+                            seekMusica(&audio, t + 10.0f);
+                            printf("⏩ Skip +10s → %.1fs\n", obterTempoMusica(&audio));
+                            fflush(stdout);
+                        }
                         atualizarNave(&nave, deltaTime);
                         atualizarCenario(&env, deltaTime);
                         atualizar_notas(tempo_jogo);

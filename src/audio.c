@@ -69,6 +69,18 @@ float obterTempoMusica(Audio *audio)
     return GetMusicTimePlayed(audio->musica);
 }
 
+void seekMusica(Audio *audio, float posicaoSegundos)
+{
+    if (!audio->musicaCarregada) return;
+
+    bool estavaTocando = IsMusicStreamPlaying(audio->musica);
+    SeekMusicStream(audio->musica, posicaoSegundos);
+    // SeekMusicStream para a música; retoma se estava tocando
+    if (estavaTocando) {
+        PlayMusicStream(audio->musica);
+    }
+}
+
 void descarregarAudio(Audio *audio)
 {
     if (audio->musicaCarregada) {
