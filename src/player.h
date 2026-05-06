@@ -14,7 +14,7 @@ typedef struct {
     bool ativa;
 }Particula;
 
-typedef struct {
+typedef struct Nave{
     Vector3 posicao;
     BoundingBox hitbox;
     Model modelo;

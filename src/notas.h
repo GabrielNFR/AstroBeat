@@ -1,11 +1,13 @@
 #ifndef NOTAS_H
-
-#include "player.h"
-
 #define NOTAS_H
+
+typedef struct Nave Nave;
+
 #define MAX_NOTAS 1000
 #define VEL_NOTAS 10.0f
-#define TEMPO_ATE_HIT (80.0f / VEL_NOTAS)
+#define HIT_OFFSET 2.0f
+#define TEMPO_ATE_HIT ((80.0f - HIT_OFFSET) / VEL_NOTAS)
+#define MISS_HIT (15.0f - HIT_OFFSET)
 #define JANELA_PERFECT   0.050f
 #define JANELA_GREAT     0.075f
 #define JANELA_GOOD      0.100f

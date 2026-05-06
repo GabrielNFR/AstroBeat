@@ -1,5 +1,6 @@
 #include "player.h"
 #include "raymath.h"
+#include "notas.h"
 
 void inicializarNave(Nave *jogador)
 {
@@ -125,7 +126,7 @@ void desenharNave(Nave *jogador)
     Vector3 eixoTorcaoZ = {0.0f, 0.0f, 1.0f};
     DrawModelEx(jogador->modelo, jogador->posicao, eixoTorcaoZ, jogador->anguloRolamento, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
 
-    Vector3 centroHit  = { jogador->posicao.x, 0.02f, 0.0f };
+    Vector3 centroHit = { jogador->posicao.x, 0.02f, -HIT_OFFSET };
     Vector3 eixoX      = { 1.0f, 0.0f, 0.0f };  
 
     DrawCircle3D(centroHit, 0.65f, eixoX, 90.0f, Fade(MAGENTA, 0.25f));

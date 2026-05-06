@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "notas.h"
+#include "player.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -77,10 +78,10 @@ void desenhar_notas(float tempo_atual){
     // Verifica se a nota está na tela (notas longas olham cabeça e cauda)
     if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].duracao > 0.0f) {
         float zTail = z - array_notas[i].duracao * VEL_NOTAS;
-        if (z > 15.0f && zTail > 15.0f) continue;
+        if (z > 15.0f - HIT_OFFSET && zTail > 15.0f - HIT_OFFSET) continue;
         if (z < -80.0f && zTail < -80.0f) continue;
     } else {
-        if (z >= 15.0f || z <= -80.0f) continue;
+        if (z >= 15.0f - HIT_OFFSET || z <= -80.0f) continue;
     }
 
     // Desenha conforme o tipo
@@ -153,7 +154,7 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
         if (array_notas[i].tipo == NOTA_LONGA)
         {
             float z_tail = z_nota - array_notas[i].duracao * VEL_NOTAS;
-            if (z_tail >= 15.0f && array_notas[i].holding != 1)
+            if (z_tail >= 15.0f - HIT_OFFSET && array_notas[i].holding != 1)
             {
                 array_notas[i].finalizada = 1;
                 array_notas[i].resultado = JULG_MISS;
@@ -164,7 +165,7 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
         }
         else
         {
-            if (z_nota >= 15.0f)
+            if (z_nota >= 15.0f - HIT_OFFSET)
             {
                 array_notas[i].finalizada = 1;
                 array_notas[i].resultado = JULG_MISS;
