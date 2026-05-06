@@ -124,6 +124,13 @@ void desenharNave(Nave *jogador)
 {
     Vector3 eixoTorcaoZ = {0.0f, 0.0f, 1.0f};
     DrawModelEx(jogador->modelo, jogador->posicao, eixoTorcaoZ, jogador->anguloRolamento, (Vector3){1.0f, 1.0f, 1.0f}, WHITE);
+
+    Vector3 centroHit  = { jogador->posicao.x, 0.02f, 0.0f };
+    Vector3 eixoX      = { 1.0f, 0.0f, 0.0f };  
+
+    DrawCircle3D(centroHit, 0.65f, eixoX, 90.0f, Fade(MAGENTA, 0.25f));
+    DrawCircle3D(centroHit, 0.55f, eixoX, 90.0f, Fade(MAGENTA, 0.55f));
+    DrawCircle3D(centroHit, 0.50f, eixoX, 90.0f, Fade(MAGENTA, 0.80f));
    
     // DrawCube(jogador->posicao, 1.0f, 1.0f, 1.0f, RED);
     // DrawCubeWires(jogador->posicao, 1.0f, 1.0f, 1.0f, MAROON); 

@@ -96,7 +96,6 @@ void desenharPistaEstrelas(Env *env)
 
     float tamSegmento = 10.0f;
     int numSegmentos = 10;
-    float larguraPista = 6.0f;
 
     Color neon = (Color){191, 0, 255, 255};
     Color basePista = (Color){15, 5, 25, 255};
@@ -106,11 +105,11 @@ void desenharPistaEstrelas(Env *env)
         float zAtual = 10.0f - (i * tamSegmento) - (tamSegmento / 2.0f);
         float alpha = 1.0f - ((float)i / numSegmentos);
 
-        DrawCube((Vector3){0.0f, -0.1f, zAtual}, larguraPista, 0.1f, tamSegmento, Fade(basePista, alpha * 0.9f));
-        DrawCube((Vector3){-3.0f, 0.0f, zAtual}, 0.2f, 0.05f, tamSegmento, Fade(neon, alpha));
-        DrawCube((Vector3){-1.0f, 0.0f, zAtual}, 0.1f, 0.05f, tamSegmento, Fade(neon, alpha * 0.5f));
-        DrawCube((Vector3){ 1.0f, 0.0f, zAtual}, 0.1f, 0.05f, tamSegmento, Fade(neon, alpha * 0.5f));
-        DrawCube((Vector3){ 3.0f, 0.0f, zAtual}, 0.2f, 0.05f, tamSegmento, Fade(neon, alpha));
+        DrawCube((Vector3){0.0f, -0.1f, zAtual}, LARGURA_PISTA, 0.1f, tamSegmento, Fade(basePista, alpha * 0.9f));
+        DrawCube((Vector3){BORDA_ESQUERDA, 0.0f, zAtual}, 0.2f, 0.05f, tamSegmento, Fade(neon, alpha));
+        DrawCube((Vector3){BORDA_EC, 0.0f, zAtual}, 0.1f, 0.05f, tamSegmento, Fade(neon, alpha * 0.5f));
+        DrawCube((Vector3){BORDA_CD, 0.0f, zAtual}, 0.1f, 0.05f, tamSegmento, Fade(neon, alpha * 0.5f));
+        DrawCube((Vector3){BORDA_DIREITA, 0.0f, zAtual}, 0.2f, 0.05f, tamSegmento, Fade(neon, alpha));
     }
 }
 
