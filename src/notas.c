@@ -140,6 +140,8 @@ void resetar_notas(void)
 
 void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
 {
+    bool hitPorTipo[5] = {0};
+    
     for (int i = 0; i < total_de_notas; i++)
     {
         if (!array_notas[i].ativa || array_notas[i].finalizada)
@@ -180,9 +182,12 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
         {
             if (array_notas[i].tipo != NOTA_LONGA)
             {
+                if (hitPorTipo[array_notas[i].tipo]) continue;
+                
                 int mesma_lane = (jogador->laneAnterior == array_notas[i].lane);
                 if (mesma_lane && TeclaPressionadaParaTipo(array_notas[i].tipo))
                 {
+                    hitPorTipo[array_notas[i].tipo] = true;
                     array_notas[i].finalizada = 1;
 
                     if (diferenca_absoluta <= JANELA_PERFECT) {
@@ -203,9 +208,12 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
             }
             else if (array_notas[i].holding == 0)
             {
+                if (hitPorTipo[NOTA_LONGA]) continue;
+                
                 int mesma_lane = (jogador->laneAnterior == array_notas[i].lane);
                 if (mesma_lane && TeclaPressionadaParaTipo(NOTA_LONGA))
                 {
+                    hitPorTipo[array_notas[i].tipo] = true;
                     array_notas[i].holding = 1;
 
                     if (diferenca_absoluta <= JANELA_PERFECT) {
