@@ -5,14 +5,8 @@ typedef struct Nave Nave;
 
 #define MAX_NOTAS 1000
 #define VEL_NOTAS 10.0f
-#define HIT_OFFSET 2.0f
+#define HIT_OFFSET 2.0f // offset a partir do z 0.0f
 #define TEMPO_ATE_HIT ((80.0f - HIT_OFFSET) / VEL_NOTAS)
-#define MISS_HIT (15.0f - HIT_OFFSET)
-#define JANELA_PERFECT   0.050f
-#define JANELA_GREAT     0.075f
-#define JANELA_GOOD      0.100f
-#define JANELA_OK        0.125f
-#define JANELA_MISS      0.150f
 
 typedef enum{
     NOTA_GRAVE = 0,
@@ -46,8 +40,14 @@ typedef struct{
 
 extern Notas array_notas[MAX_NOTAS];
 extern int total_de_notas;
+extern float JANELA_PERFECT;
+extern float JANELA_GREAT;
+extern float JANELA_GOOD;
+extern float JANELA_OK;
+extern float JANELA_MISS;
 
 void leitura_arquivo_musica(void);
+void leitura_arquivo_coletaveis(void);
 void atualizar_notas(float tempo_atual);
 void desenhar_notas(float tempo_atual);
 void resetar_notas(void);

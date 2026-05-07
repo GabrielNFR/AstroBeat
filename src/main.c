@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "globals.h"
 #include "menu.h"
+#include "buffs.h"
 #include "player.h"
 #include "environment.h"
 #include "notas.h"
@@ -36,6 +37,7 @@ int main(void) {
     inicializarCenario(&env);
 
     leitura_arquivo_musica();
+    leitura_arquivo_coletaveis();
     Audio audio;
     inicializarAudio(&audio, "songs/Elektronomia.ogg");
 
@@ -88,10 +90,22 @@ int main(void) {
                             printf("⏩ Skip +10s → %.1fs\n", tempo_jogo);
                             fflush(stdout);
                         }
+                        if (nave.buffMultiplicador && tempo_jogo >= nave.tempoFimMult) {
+                            nave.buffMultiplicador = false;
+                            printf("BUFF MULTIPLICADOR EXPIRADO\n");
+                            fflush(stdout);
+                        }
+                        if (nave.buffJanela && tempo_jogo >= nave.tempoFimJanela) {
+                            nave.buffJanela = false;
+                            printf("BUFF JANELA EXPIRADO\n");
+                            fflush(stdout);
+                        }
                         atualizarNave(&nave, deltaTime);
                         atualizarCenario(&env, deltaTime);
                         atualizar_notas(tempo_jogo);
                         verificarAcertos(&nave, tempo_jogo, deltaTime);
+                        atualizarColetavel(tempo_jogo);
+                        verificarColisao(&nave, tempo_jogo);
                     }
                     break;
 
@@ -106,6 +120,8 @@ int main(void) {
             if (estadoAnterior != gameState) {
                 if (estadoAnterior == SONG_SELECT && gameState == PLAYING) {
                     resetar_notas();
+                    limparColetavel();
+                    leitura_arquivo_coletaveis();
                     iniciarMusica(&audio);
                     tempo_inicio_musica = obterTempoMusica(&audio);
                     tempo_jogo = 0.0f;
@@ -123,6 +139,7 @@ int main(void) {
                     (gameState == MENU || gameState == QUIT)) {
                     pararMusica(&audio);
                     resetar_notas();
+                    limparColetavel();
                     tempo_inicio_musica = 0.0f;
                     tempo_jogo = 0.0f;
                 }
@@ -173,6 +190,7 @@ int main(void) {
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
                             desenhar_notas(tempo_jogo);
+                            desenharColetavel(tempo_jogo);
                         EndMode3D();
                         DrawFPS(10, 10);
                         break;
@@ -187,6 +205,7 @@ int main(void) {
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
                             desenhar_notas(tempo_jogo);
+                            desenharColetavel(tempo_jogo);
                         EndMode3D();
 
                         desenharPause();
@@ -199,6 +218,7 @@ int main(void) {
             EndDrawing();
         }
 
+        limparColetavel();
         descarregarCenario(&env);
         descarregarNave(&nave);
         descarregarAudio(&audio);

@@ -1,11 +1,18 @@
 #include "raylib.h"
 #include "notas.h"
 #include "player.h"
+#include "buffs.h"
 #include <stdio.h>
 #include <math.h>
 
 Notas array_notas[1000];
 int total_de_notas;
+
+float JANELA_PERFECT = 0.050f;
+float JANELA_GREAT   = 0.075f;
+float JANELA_GOOD    = 0.100f;
+float JANELA_OK      = 0.125f;
+float JANELA_MISS    = 0.150f;
 
 static bool TeclaPressionadaParaTipo(Tiponota tipo)
 {
@@ -30,12 +37,11 @@ static bool TeclaSeguradaParaTipo(Tiponota tipo)
 void leitura_arquivo_musica(){
     int i= 0;
 
-    FILE *f = fopen("mapas/mapaElektronomia.txt", "r");
+    FILE *f = fopen("mapasMusicas/mapaElektronomia.txt", "r");
     if (f==NULL){
         printf("erro ao abrir o arquivo");
         return;
     }
-
 
     while(i < 1000 && fscanf(f,"%f %d %d %f",&array_notas[i].tempo, &array_notas[i].lane, (int*)&array_notas[i].tipo, &array_notas[i].duracao)==4){
         array_notas[i].ativa=0;
@@ -44,12 +50,12 @@ void leitura_arquivo_musica(){
         array_notas[i].holding = 0;
         array_notas[i].consumo = 0;
         array_notas[i].pontos=100;
-        printf("Nota %d: tempo=%.2f lane=%d tipo=%d dur=%.2f\n\n",
-       i,
-       array_notas[i].tempo,
-       array_notas[i].lane,
-       array_notas[i].tipo,
-       array_notas[i].duracao);
+        //printf("Nota %d: tempo=%.2f lane=%d tipo=%d dur=%.2f\n\n",
+       //i,
+       //array_notas[i].tempo,
+       //array_notas[i].lane,
+       //array_notas[i].tipo,
+       //array_notas[i].duracao);
         i++;
     }
 
@@ -58,6 +64,26 @@ void leitura_arquivo_musica(){
     fclose(f);
 }
 
+void leitura_arquivo_coletaveis(void)
+{
+    FILE *f = fopen("mapasColetaveis/mapaElektronomia.txt", "r");
+    if (f == NULL) {
+        printf("❌ coletaveis: arquivo não encontrado\n");
+        return;
+    }
+    printf("coletaveis: arquivo aberto\n");
+
+    float tempo, duracao;
+    int lane, tipoBuff;
+    int contador = 0;
+    while (fscanf(f, "%f %d %d %f", &tempo, &lane, &tipoBuff, &duracao) == 4)
+    {
+        inserirColetavel(tempo, lane, (TipoBuff)tipoBuff, duracao);
+        contador++;
+    }
+    printf("coletaveis: %d lidos\n", contador);
+    fclose(f);
+}
 void atualizar_notas( float tempo_atual){
     for (int i=0;i<total_de_notas;i++){
         if(!array_notas[i].ativa && tempo_atual>=array_notas[i].tempo){
@@ -141,6 +167,12 @@ void resetar_notas(void)
 void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
 {
     bool hitPorTipo[5] = {0};
+
+    float janela_perfect = JANELA_PERFECT + (jogador->buffJanela ? 0.020f : 0.0f);
+    float janela_great   = JANELA_GREAT   + (jogador->buffJanela ? 0.020f : 0.0f);
+    float janela_good    = JANELA_GOOD    + (jogador->buffJanela ? 0.020f : 0.0f);
+    float janela_ok      = JANELA_OK      + (jogador->buffJanela ? 0.020f : 0.0f);
+    float janela_miss    = JANELA_MISS    + (jogador->buffJanela ? 0.020f : 0.0f);
     
     for (int i = 0; i < total_de_notas; i++)
     {
@@ -178,7 +210,7 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
         }
 
         // JANELA DE HIT (normal + cabeça da longa)
-        if (diferenca_absoluta <= JANELA_MISS)
+        if (diferenca_absoluta <= janela_miss)
         {
             if (array_notas[i].tipo != NOTA_LONGA)
             {
@@ -189,17 +221,19 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
                 {
                     hitPorTipo[array_notas[i].tipo] = true;
                     array_notas[i].finalizada = 1;
+                    array_notas[i].pontos = jogador->buffMultiplicador ? 200 : 100;
+                    if (jogador->buffMultiplicador) printf("2x PONTOS\n");
 
-                    if (diferenca_absoluta <= JANELA_PERFECT) {
+                    if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
                         printf("PERFECT\n");
-                    } else if (diferenca_absoluta <= JANELA_GREAT) {
+                    } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
                         printf("GREAT\n");
-                    } else if (diferenca_absoluta <= JANELA_GOOD) {
+                    } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
                         printf("GOOD\n");
-                    } else if (diferenca_absoluta <= JANELA_OK) {
+                    } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
                         printf("OK\n");
                     }
@@ -215,17 +249,19 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
                 {
                     hitPorTipo[array_notas[i].tipo] = true;
                     array_notas[i].holding = 1;
+                    array_notas[i].pontos = jogador->buffMultiplicador ? 200 : 100;
+                    if (jogador->buffMultiplicador) printf("2x PONTOS (LONG)\n");
 
-                    if (diferenca_absoluta <= JANELA_PERFECT) {
+                    if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
                         printf("LONG HEAD PERFECT\n");
-                    } else if (diferenca_absoluta <= JANELA_GREAT) {
+                    } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
                         printf("LONG HEAD GREAT\n");
-                    } else if (diferenca_absoluta <= JANELA_GOOD) {
+                    } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
                         printf("LONG HEAD GOOD\n");
-                    } else if (diferenca_absoluta <= JANELA_OK) {
+                    } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
                         printf("LONG HEAD OK\n");
                     }

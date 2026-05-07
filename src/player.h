@@ -23,6 +23,10 @@ typedef struct Nave{
     float anguloRolamento;
     float laneAtual;
     float laneAnterior;
+    float tempoFimMult;
+    float tempoFimJanela;
+    bool buffMultiplicador;
+    bool buffJanela;
 }Nave;
 
 void inicializarNave(Nave *jogador);
