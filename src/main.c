@@ -67,7 +67,7 @@ int main(void) {
                     break;
 
                 case SETTINGS:
-                    atualizarSettings(&gameState);
+                    atualizarSettings(&gameState, &audio);
                     atualizarFundoMenu(&env, deltaTime);
                     break;
 
@@ -151,7 +151,7 @@ int main(void) {
                             desenharFundoMenu(&env);
                             rlEnableDepthMask();
                         EndMode3D();
-                        desenharSettings();
+                        desenharSettings(&audio);
                         break;
 
                     case PLAYING:

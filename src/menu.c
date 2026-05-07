@@ -1,4 +1,7 @@
+#include <stdio.h>
 #include "menu.h"
+#include "audio.h"
+#include <raylib.h>
 
 // variaveis
 static int menuSelectedOption = 0;
@@ -79,14 +82,30 @@ void desenharSongSelect(void) {
 }
 
 // settings
-void atualizarSettings(GameState *state) {
-    if (IsKeyPressed(KEY_ESCAPE)) *state = MENU;
+void atualizarSettings(GameState *state, Audio *audio) {
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        *state = MENU;
+    }
+
+    if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
+        definirVolumeMusica(audio, audio->volumeMusica - 0.05f);
+    }
+
+    if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
+        definirVolumeMusica(audio, audio->volumeMusica + 0.05f);
+    }
 }
-void desenharSettings(void) {
+
+void desenharSettings(Audio *audio) {
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
+
+    char textoVolume[32];
+    snprintf(textoVolume, sizeof(textoVolume), "Volume: %.0f%%", audio->volumeMusica * 100.0f);
+
     DrawText("Configurações", screenWidth/2 - MeasureText("Configurações", 30)/2, screenHeight/5, 30, MAGENTA);
-    DrawText("Em breve...", screenWidth/2 - MeasureText("Em breve...", 20)/2, screenHeight/2, 20, RAYWHITE);
+    DrawText(textoVolume, screenWidth/2 - MeasureText(textoVolume, 20)/2, screenHeight/2, 20, RAYWHITE);
+    DrawText("A / D ou < / > para ajustar", screenWidth/2 - MeasureText("A / D ou < / > para ajustar", 16)/2, screenHeight/2 + 35, 16, Fade(RAYWHITE, 0.7f));
     DrawText("ESC para voltar", screenWidth/2 - MeasureText("ESC para voltar", 16)/2, screenHeight*3/4, 16, Fade(RAYWHITE, 0.7f));
 }
 

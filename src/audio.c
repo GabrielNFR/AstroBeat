@@ -1,4 +1,5 @@
 #include "audio.h"
+#include <raylib.h>
 #include <stdio.h>
 
 bool inicializarAudio(Audio *audio, const char *caminhoMusica)
@@ -67,6 +68,17 @@ float obterTempoMusica(Audio *audio)
     if (!audio->musicaCarregada) return 0.0f;
 
     return GetMusicTimePlayed(audio->musica);
+}
+
+void definirVolumeMusica(Audio *audio, float volume)
+{
+    if (!audio->musicaCarregada) return;
+
+    if (volume < 0.0f) volume = 0.0f;
+    if (volume > 1.0f) volume = 1.0f;
+
+    audio->volumeMusica = volume;
+    SetMusicVolume(audio->musica, audio->volumeMusica);
 }
 
 void seekMusica(Audio *audio, float posicaoSegundos)
