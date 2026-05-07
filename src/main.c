@@ -40,6 +40,7 @@ int main(void) {
     inicializarAudio(&audio, "songs/Elektronomia.ogg");
 
     float tempo_jogo = 0.0f;
+    float tempo_inicio_musica = 0.0f;
     while (true) {
             if (WindowShouldClose() || gameState == QUIT) {
                 break;
@@ -51,7 +52,10 @@ int main(void) {
             atualizarAudio(&audio);
 
             if (gameState == PLAYING || gameState == PAUSED) {
-                tempo_jogo = obterTempoMusica(&audio);
+                tempo_jogo = obterTempoMusica(&audio) - tempo_inicio_musica;
+                if (tempo_jogo < 0.0f) {
+                    tempo_jogo = 0.0f;
+                }
             }
 
             switch (gameState) {
@@ -77,9 +81,11 @@ int main(void) {
                     } else {
                         // DEBUG: skip na música
                         if (IsKeyPressed(KEY_F)) {
-                            float t = obterTempoMusica(&audio);
-                            seekMusica(&audio, t + 10.0f);
-                            printf("⏩ Skip +10s → %.1fs\n", obterTempoMusica(&audio));
+                            float novoTempo = tempo_jogo + 10.0f;
+                            seekMusica(&audio, novoTempo);
+                            tempo_inicio_musica = obterTempoMusica(&audio) - novoTempo;
+                            tempo_jogo = novoTempo;
+                            printf("⏩ Skip +10s → %.1fs\n", tempo_jogo);
                             fflush(stdout);
                         }
                         atualizarNave(&nave, deltaTime);
@@ -101,6 +107,7 @@ int main(void) {
                 if (estadoAnterior == SONG_SELECT && gameState == PLAYING) {
                     resetar_notas();
                     iniciarMusica(&audio);
+                    tempo_inicio_musica = obterTempoMusica(&audio);
                     tempo_jogo = 0.0f;
                 }
 
@@ -115,6 +122,8 @@ int main(void) {
                 if ((estadoAnterior == PLAYING || estadoAnterior == PAUSED) &&
                     (gameState == MENU || gameState == QUIT)) {
                     pararMusica(&audio);
+                    resetar_notas();
+                    tempo_inicio_musica = 0.0f;
                     tempo_jogo = 0.0f;
                 }
             }
@@ -182,6 +191,9 @@ int main(void) {
 
                         desenharPause();
                         DrawFPS(10, 10);
+                        break;
+
+                    case QUIT:
                         break;
                 }
             EndDrawing();
