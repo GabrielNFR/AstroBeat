@@ -5,6 +5,7 @@
 #include "player.h"
 #include "environment.h"
 #include "notas.h"
+#include "score.h"
 #include "rlgl.h"
 #include "audio.h"
 #include <stdio.h>
@@ -106,6 +107,7 @@ int main(void) {
                         verificarAcertos(&nave, tempo_jogo, deltaTime);
                         atualizarColetavel(tempo_jogo);
                         verificarColisao(&nave, tempo_jogo);
+                        
                     }
                     break;
 
