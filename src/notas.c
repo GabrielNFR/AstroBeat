@@ -3,6 +3,7 @@
 #include "score.h"
 #include "player.h"
 #include "buffs.h"
+#include "notas_modelos.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -105,8 +106,8 @@ void desenhar_notas(float tempo_atual){
     // Verifica se a nota está na tela (notas longas olham cabeça e cauda)
     if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].duracao > 0.0f) {
         float zTail = z - array_notas[i].duracao * VEL_NOTAS;
-        if (z > 15.0f - HIT_OFFSET && zTail > 15.0f - HIT_OFFSET) continue;
-        if (z < -80.0f && zTail < -80.0f) continue;
+        if (z >= 15.0f - HIT_OFFSET && zTail >= 15.0f - HIT_OFFSET) continue;
+        if (z <= -80.0f && zTail <= -80.0f) continue;
     } else {
         if (z >= 15.0f - HIT_OFFSET || z <= -80.0f) continue;
     }
@@ -114,10 +115,10 @@ void desenhar_notas(float tempo_atual){
     // Desenha conforme o tipo
     switch (array_notas[i].tipo) {
         case NOTA_GRAVE:
-            DrawCube((Vector3){x, 0.5f, z}, 0.5f, 0.5f, 0.5f, BLUE);
+            desenharNotaGrave(x, z);
             break;
         case NOTA_AGUDO:
-            DrawCube((Vector3){x, 0.5f, z}, 0.5f, 0.5f, 0.5f, RED);
+            desenharNotaAgudo(x, z);
             break;
         case NOTA_LONGA:
         {
@@ -144,10 +145,10 @@ void desenhar_notas(float tempo_atual){
             break;
         }
         case NOTA_DIREITA:
-            DrawCube((Vector3){x, 0.5f, z}, 0.5f, 0.5f, 0.5f, GREEN);
+            desenharNotaDireita(x, z);
             break;
         case NOTA_ESQUERDA:
-            DrawCube((Vector3){x, 0.5f, z}, 0.5f, 0.5f, 0.5f, YELLOW);
+            desenharNotaEsquerda(x, z);
             break;
         }
     }
