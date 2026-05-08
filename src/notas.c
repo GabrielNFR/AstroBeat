@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "notas.h"
+#include "score.h"
 #include "player.h"
 #include "buffs.h"
 #include <stdio.h>
@@ -164,7 +165,7 @@ void resetar_notas(void)
     }
 }
 
-void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
+void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float deltaTime)
 {
     bool hitPorTipo[5] = {0};
 
@@ -199,10 +200,11 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
         }
         else
         {
-            if (z_nota >= 15.0f - HIT_OFFSET)
+            if (diferenca_tempo > JANELA_MISS)
             {
                 array_notas[i].finalizada = 1;
                 array_notas[i].resultado = JULG_MISS;
+                errar_nota(score);
                 printf("MISS (saiu da tela)\n");
                 fflush(stdout);
                 continue;
@@ -226,15 +228,19 @@ void verificarAcertos(Nave *jogador, float tempo_atual, float deltaTime)
 
                     if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
+                        sistema_pontos(score,JULG_PERFECT);
                         printf("PERFECT\n");
                     } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
+                        sistema_pontos(score,JULG_GREAT);
                         printf("GREAT\n");
                     } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
+                        sistema_pontos(score,JULG_GOOD);
                         printf("GOOD\n");
                     } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
+                        sistema_pontos(score,JULG_OK);
                         printf("OK\n");
                     }
                     fflush(stdout);

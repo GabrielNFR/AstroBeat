@@ -42,6 +42,9 @@ int main(void) {
     Audio audio;
     inicializarAudio(&audio, "songs/Elektronomia.ogg");
 
+    Score score;
+    init_sistema_pontos(&score);
+    
     float tempo_jogo = 0.0f;
     float tempo_inicio_musica = 0.0f;
     while (true) {
@@ -104,7 +107,7 @@ int main(void) {
                         atualizarNave(&nave, deltaTime);
                         atualizarCenario(&env, deltaTime);
                         atualizar_notas(tempo_jogo);
-                        verificarAcertos(&nave, tempo_jogo, deltaTime);
+                        verificarAcertos(&nave, &score, tempo_jogo, deltaTime);
                         atualizarColetavel(tempo_jogo);
                         verificarColisao(&nave, tempo_jogo);
                         
@@ -121,6 +124,7 @@ int main(void) {
 
             if (estadoAnterior != gameState) {
                 if (estadoAnterior == SONG_SELECT && gameState == PLAYING) {
+                    init_sistema_pontos(&score);
                     resetar_notas();
                     limparColetavel();
                     leitura_arquivo_coletaveis();
@@ -194,6 +198,7 @@ int main(void) {
                             desenhar_notas(tempo_jogo);
                             desenharColetavel(tempo_jogo);
                         EndMode3D();
+                        draw_sistema_pontos(&score);
                         DrawFPS(10, 10);
                         break;
 
