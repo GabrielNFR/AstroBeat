@@ -37,10 +37,9 @@ int main(void) {
     Env env;
     inicializarCenario(&env);
 
-    leitura_arquivo_musica();
-    leitura_arquivo_coletaveis();
     Audio audio;
-    inicializarAudio(&audio, "songs/Elektronomia.ogg");
+    audio.musicaCarregada = false;
+    audio.volumeMusica = 0.8f;
 
     Score score;
     init_sistema_pontos(&score);
@@ -124,10 +123,33 @@ int main(void) {
 
             if (estadoAnterior != gameState) {
                 if (estadoAnterior == SONG_SELECT && gameState == PLAYING) {
+                    const SongInfo *song = obterMusicaSelecionada();
+                    
+                    float volumeSalvo = audio.volumeMusica;
+
                     init_sistema_pontos(&score);
                     resetar_notas();
                     limparColetavel();
-                    leitura_arquivo_coletaveis();
+                    leitura_arquivo_musica(song->caminhoBeatmap);
+                    leitura_arquivo_coletaveis(song->caminhoColetaveis);
+                    
+                    if (audio.musicaCarregada)
+                    {
+                        pararMusica(&audio);
+                        descarregarAudio(&audio);
+                    }
+
+                    if (song->caminhoMusica)
+                    {
+                        inicializarAudio(&audio, song->caminhoMusica);
+                        definirVolumeMusica(&audio, volumeSalvo);
+                    }
+                    else
+                    {
+                        audio.musicaCarregada = false;
+                        audio.volumeMusica = volumeSalvo;
+                    }
+
                     iniciarMusica(&audio);
                     tempo_inicio_musica = obterTempoMusica(&audio);
                     tempo_jogo = 0.0f;

@@ -72,13 +72,14 @@ float obterTempoMusica(Audio *audio)
 
 void definirVolumeMusica(Audio *audio, float volume)
 {
-    if (!audio->musicaCarregada) return;
-
     if (volume < 0.0f) volume = 0.0f;
     if (volume > 1.0f) volume = 1.0f;
 
-    audio->volumeMusica = volume;
-    SetMusicVolume(audio->musica, audio->volumeMusica);
+    audio->volumeMusica = volume;                    
+
+    if (audio->musicaCarregada) {                    
+        SetMusicVolume(audio->musica, volume);
+    }
 }
 
 void seekMusica(Audio *audio, float posicaoSegundos)

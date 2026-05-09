@@ -36,12 +36,19 @@ static bool TeclaSeguradaParaTipo(Tiponota tipo)
     }
 }
 
-void leitura_arquivo_musica(){
+void leitura_arquivo_musica(const char *caminho){
     int i= 0;
 
-    FILE *f = fopen("mapasMusicas/mapaElektronomia.txt", "r");
+    if (caminho == NULL)
+    {
+        total_de_notas = 0;
+        return;
+    }
+
+    FILE *f = fopen(caminho, "r");
     if (f==NULL){
-        printf("erro ao abrir o arquivo");
+        printf("Erro ao abrir o arquivo: %s\n", caminho);
+        total_de_notas = 0;
         return;
     }
 
@@ -66,14 +73,20 @@ void leitura_arquivo_musica(){
     fclose(f);
 }
 
-void leitura_arquivo_coletaveis(void)
+void leitura_arquivo_coletaveis(const char *caminho)
 {
-    FILE *f = fopen("mapasColetaveis/mapaElektronomia.txt", "r");
-    if (f == NULL) {
-        printf("❌ coletaveis: arquivo não encontrado\n");
+    if (caminho == NULL)
+    {
+        total_de_notas = 0;
         return;
     }
-    printf("coletaveis: arquivo aberto\n");
+
+    FILE *f = fopen(caminho, "r");
+    if (f == NULL) {
+        printf("Coletaveis: arquivo não encontrado\n");
+        return;
+    }
+    printf("Coletaveis: arquivo aberto\n");
 
     float tempo, duracao;
     int lane, tipoBuff;

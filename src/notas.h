@@ -31,8 +31,8 @@ extern float JANELA_GOOD;
 extern float JANELA_OK;
 extern float JANELA_MISS;
 
-void leitura_arquivo_musica(void);
-void leitura_arquivo_coletaveis(void);
+void leitura_arquivo_musica(const char *caminho);
+void leitura_arquivo_coletaveis(const char *caminho);
 void atualizar_notas(float tempo_atual);
 void desenhar_notas(float tempo_atual);
 void resetar_notas(void);
