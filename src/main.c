@@ -157,6 +157,7 @@ int main(void) {
 
                 if (estadoAnterior == PLAYING && gameState == PAUSED) {
                     pausarMusica(&audio);
+                    printf("PAUSADO em: %.4f\n", tempo_jogo);
                 }
 
                 if (estadoAnterior == PAUSED && gameState == PLAYING) {

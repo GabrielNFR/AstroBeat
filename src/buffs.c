@@ -72,14 +72,14 @@ void atualizarColetavel(float tempo_atual)
     {
         Coletavel *proximo = atual->proximo;
 
-        if (!atual->ativo && tempo_atual >= atual->tempoSpawn)
+        if (!atual->ativo && tempo_atual >= atual->tempoSpawn - TEMPO_ATE_HIT)
         {
             atual->ativo = 1;
         }
         
         if (atual->ativo)
         {
-            float z = -80.0f + (tempo_atual - atual->tempoSpawn) * VEL_NOTAS;
+            float z = -80.0f + (tempo_atual - (atual->tempoSpawn - TEMPO_ATE_HIT)) * VEL_NOTAS;
             if (z >= (15 - HIT_OFFSET))
             {
                 removerColetavel(anterior, atual);
@@ -106,7 +106,7 @@ void desenharColetavel(float tempo_atual)
         }
 
         float x = posX[atual->lane];
-        float z = -80.0f + (tempo_atual - atual->tempoSpawn) * VEL_NOTAS;
+        float z = -80.0f + (tempo_atual - (atual->tempoSpawn - TEMPO_ATE_HIT)) * VEL_NOTAS;
         if (z >= (15 - HIT_OFFSET) || z <= -80.0f)
         {
             atual = atual->proximo;
@@ -140,7 +140,7 @@ void verificarColisao(Nave *jogador, float tempo_atual)
         }
 
         float x = posX[atual->lane];
-        float z = -80.0f + (tempo_atual - atual->tempoSpawn) * VEL_NOTAS;
+        float z = -80.0f + (tempo_atual - (atual->tempoSpawn - TEMPO_ATE_HIT)) * VEL_NOTAS;
 
         BoundingBox hitboxColetavel = {
             {x - 0.3f, 1.0f - 0.3f, z - 0.3f},

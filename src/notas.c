@@ -101,7 +101,7 @@ void leitura_arquivo_coletaveis(const char *caminho)
 }
 void atualizar_notas( float tempo_atual){
     for (int i=0;i<total_de_notas;i++){
-        if(!array_notas[i].ativa && tempo_atual>=array_notas[i].tempo){
+        if(!array_notas[i].ativa && tempo_atual >= array_notas[i].tempo - TEMPO_ATE_HIT){
             array_notas[i].ativa=1;
         }
     }
@@ -114,7 +114,7 @@ void desenhar_notas(float tempo_atual){
     if (!array_notas[i].ativa || array_notas[i].finalizada) continue;
 
     float x = posX[array_notas[i].lane];
-    float z = -80.0f + (tempo_atual - array_notas[i].tempo) * VEL_NOTAS;
+    float z = -80.0f + (tempo_atual - (array_notas[i].tempo - TEMPO_ATE_HIT)) * VEL_NOTAS;
 
     // Verifica se a nota está na tela (notas longas olham cabeça e cauda)
     if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].duracao > 0.0f) {
@@ -194,7 +194,7 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
         if (!array_notas[i].ativa || array_notas[i].finalizada)
             continue;
 
-        float tempo_hit_ideal = array_notas[i].tempo + TEMPO_ATE_HIT;
+        float tempo_hit_ideal = array_notas[i].tempo;
         float diferenca_tempo = tempo_atual - tempo_hit_ideal;
         float diferenca_absoluta = fabsf(diferenca_tempo);
         float z_nota = -80.0f + (tempo_atual - array_notas[i].tempo) * VEL_NOTAS;
@@ -293,7 +293,7 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
         // HOLD: roda todo frame enquanto segurada
         if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].holding == 1)
         {
-            float tempo_fim = array_notas[i].tempo + TEMPO_ATE_HIT + array_notas[i].duracao;
+            float tempo_fim = array_notas[i].tempo + array_notas[i].duracao;
 
             if (!TeclaSeguradaParaTipo(NOTA_LONGA))
             {
