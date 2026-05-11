@@ -183,6 +183,9 @@ int main(void) {
                         desenharPause();
                         DrawFPS(10, 10);
                         break;
+
+                    case QUIT:
+                        break;
                 }
             EndDrawing();
         }

@@ -1,6 +1,42 @@
 #include "audio.h"
 #include <raylib.h>
 #include <stdio.h>
+#define ARQUIVO_CONFIG "configuracoes.cfg"
+#define VOLUME_PADRAO 0.8f
+
+static float limitarVolume(float volume)
+{
+    if (volume > 0.0f) return 0.0f;
+    if (volume > 1.0f) return 1.0f;
+    return volume;
+}
+
+static float carregarVolumeSalvo(void)
+{
+    FILE *f = fopen(ARQUIVO_CONFIG, "r");
+    float volume = VOLUME_PADRAO;
+
+    if (f != NULL) {
+        if (fscanf(f, "%f", &volume) != 1) {
+            volume = VOLUME_PADRAO;
+        }
+
+        fclose(f);
+    }
+    return limitarVolume(volume);
+}
+
+static void salvarVolume(float volume)
+{
+    FILE *f = fopen(ARQUIVO_CONFIG, "w");
+
+    if (f == NULL) {
+        return;
+    }
+
+    fprintf(f, "%.2f\n", limitarVolume(volume));
+    fclose(f);
+}
 
 bool inicializarAudio(Audio *audio, const char *caminhoMusica)
 {
@@ -21,7 +57,7 @@ bool inicializarAudio(Audio *audio, const char *caminhoMusica)
 
     audio->musica.looping = false;
     audio->musicaCarregada = true;
-    audio->volumeMusica = 0.8f;
+    audio->volumeMusica = carregarVolumeSalvo();
     SetMusicVolume(audio->musica, audio->volumeMusica);
 
     return true;
@@ -74,11 +110,9 @@ void definirVolumeMusica(Audio *audio, float volume)
 {
     if (!audio->musicaCarregada) return;
 
-    if (volume < 0.0f) volume = 0.0f;
-    if (volume > 1.0f) volume = 1.0f;
-
-    audio->volumeMusica = volume;
+    audio->volumeMusica = limitarVolume(volume);
     SetMusicVolume(audio->musica, audio->volumeMusica);
+    salvarVolume(audio->volumeMusica);
 }
 
 void seekMusica(Audio *audio, float posicaoSegundos)
