@@ -6,7 +6,7 @@
 
 static float limitarVolume(float volume)
 {
-    if (volume > 0.0f) return 0.0f;
+    if (volume < 0.0f) return 0.0f;
     if (volume > 1.0f) return 1.0f;
     return volume;
 }
@@ -24,6 +24,11 @@ static float carregarVolumeSalvo(void)
         fclose(f);
     }
     return limitarVolume(volume);
+}
+
+float carregarVolumeConfigurado(void)
+{
+    return carregarVolumeSalvo();
 }
 
 static void salvarVolume(float volume)
@@ -108,10 +113,12 @@ float obterTempoMusica(Audio *audio)
 
 void definirVolumeMusica(Audio *audio, float volume)
 {
-    if (!audio->musicaCarregada) return;
-
     audio->volumeMusica = limitarVolume(volume);
-    SetMusicVolume(audio->musica, audio->volumeMusica);
+
+    if (audio->musicaCarregada) {
+        SetMusicVolume(audio->musica, audio->volumeMusica);
+    }
+
     salvarVolume(audio->volumeMusica);
 }
 

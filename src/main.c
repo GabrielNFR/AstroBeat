@@ -1,9 +1,11 @@
 #include "raylib.h"
 #include "globals.h"
 #include "menu.h"
+#include "buffs.h"
 #include "player.h"
 #include "environment.h"
 #include "notas.h"
+#include "score.h"
 #include "rlgl.h"
 #include "audio.h"
 #include <stdio.h>
@@ -35,11 +37,15 @@ int main(void) {
     Env env;
     inicializarCenario(&env);
 
-    leitura_arquivo_musica();
     Audio audio;
-    inicializarAudio(&audio, "songs/Elektronomia.ogg");
+    audio.musicaCarregada = false;
+    audio.volumeMusica = carregarVolumeConfigurado();
 
+    Score score;
+    init_sistema_pontos(&score);
+    
     float tempo_jogo = 0.0f;
+    float tempo_inicio_musica = 0.0f;
     while (true) {
             if (WindowShouldClose() || gameState == QUIT) {
                 break;
@@ -51,7 +57,10 @@ int main(void) {
             atualizarAudio(&audio);
 
             if (gameState == PLAYING || gameState == PAUSED) {
-                tempo_jogo = obterTempoMusica(&audio);
+                tempo_jogo = obterTempoMusica(&audio) - tempo_inicio_musica;
+                if (tempo_jogo < 0.0f) {
+                    tempo_jogo = 0.0f;
+                }
             }
 
             switch (gameState) {
@@ -77,15 +86,30 @@ int main(void) {
                     } else {
                         // DEBUG: skip na música
                         if (IsKeyPressed(KEY_F)) {
-                            float t = obterTempoMusica(&audio);
-                            seekMusica(&audio, t + 10.0f);
-                            printf("⏩ Skip +10s → %.1fs\n", obterTempoMusica(&audio));
+                            float novoTempo = tempo_jogo + 10.0f;
+                            seekMusica(&audio, novoTempo);
+                            tempo_inicio_musica = obterTempoMusica(&audio) - novoTempo;
+                            tempo_jogo = novoTempo;
+                            printf("⏩ Skip +10s → %.1fs\n", tempo_jogo);
+                            fflush(stdout);
+                        }
+                        if (nave.buffMultiplicador && tempo_jogo >= nave.tempoFimMult) {
+                            nave.buffMultiplicador = false;
+                            printf("BUFF MULTIPLICADOR EXPIRADO\n");
+                            fflush(stdout);
+                        }
+                        if (nave.buffJanela && tempo_jogo >= nave.tempoFimJanela) {
+                            nave.buffJanela = false;
+                            printf("BUFF JANELA EXPIRADO\n");
                             fflush(stdout);
                         }
                         atualizarNave(&nave, deltaTime);
                         atualizarCenario(&env, deltaTime);
                         atualizar_notas(tempo_jogo);
-                        verificarAcertos(&nave, tempo_jogo, deltaTime);
+                        verificarAcertos(&nave, &score, tempo_jogo, deltaTime);
+                        atualizarColetavel(tempo_jogo);
+                        verificarColisao(&nave, tempo_jogo);
+                        
                     }
                     break;
 
@@ -99,13 +123,41 @@ int main(void) {
 
             if (estadoAnterior != gameState) {
                 if (estadoAnterior == SONG_SELECT && gameState == PLAYING) {
+                    const SongInfo *song = obterMusicaSelecionada();
+                    
+                    float volumeSalvo = audio.volumeMusica;
+
+                    init_sistema_pontos(&score);
                     resetar_notas();
+                    limparColetavel();
+                    leitura_arquivo_musica(song->caminhoBeatmap);
+                    leitura_arquivo_coletaveis(song->caminhoColetaveis);
+                    
+                    if (audio.musicaCarregada)
+                    {
+                        pararMusica(&audio);
+                        descarregarAudio(&audio);
+                    }
+
+                    if (song->caminhoMusica)
+                    {
+                        inicializarAudio(&audio, song->caminhoMusica);
+                        definirVolumeMusica(&audio, volumeSalvo);
+                    }
+                    else
+                    {
+                        audio.musicaCarregada = false;
+                        audio.volumeMusica = volumeSalvo;
+                    }
+
                     iniciarMusica(&audio);
+                    tempo_inicio_musica = obterTempoMusica(&audio);
                     tempo_jogo = 0.0f;
                 }
 
                 if (estadoAnterior == PLAYING && gameState == PAUSED) {
                     pausarMusica(&audio);
+                    printf("PAUSADO em: %.4f\n", tempo_jogo);
                 }
 
                 if (estadoAnterior == PAUSED && gameState == PLAYING) {
@@ -115,6 +167,9 @@ int main(void) {
                 if ((estadoAnterior == PLAYING || estadoAnterior == PAUSED) &&
                     (gameState == MENU || gameState == QUIT)) {
                     pararMusica(&audio);
+                    resetar_notas();
+                    limparColetavel();
+                    tempo_inicio_musica = 0.0f;
                     tempo_jogo = 0.0f;
                 }
             }
@@ -164,7 +219,9 @@ int main(void) {
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
                             desenhar_notas(tempo_jogo);
+                            desenharColetavel(tempo_jogo);
                         EndMode3D();
+                        draw_sistema_pontos(&score);
                         DrawFPS(10, 10);
                         break;
 
@@ -178,6 +235,7 @@ int main(void) {
                             desenharPistaEstrelas(&env);
                             desenharNave(&nave);
                             desenhar_notas(tempo_jogo);
+                            desenharColetavel(tempo_jogo);
                         EndMode3D();
 
                         desenharPause();
@@ -190,6 +248,7 @@ int main(void) {
             EndDrawing();
         }
 
+        limparColetavel();
         descarregarCenario(&env);
         descarregarNave(&nave);
         descarregarAudio(&audio);

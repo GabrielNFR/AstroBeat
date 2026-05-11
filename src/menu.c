@@ -5,13 +5,21 @@
 
 // variaveis
 static int menuSelectedOption = 0;
-static int songSelectedOption = 0;
-static const char *mockSongs[] = {
-    "Dragonite",
-    "Kingambit",
-    "Mew"
+
+// lista de musicas
+
+const SongInfo songList[] = {
+    {"Sky High", "songs/Elektronomia.ogg", "mapasMusicas/mapaElektronomia.txt", "mapasColetaveis/mapaElektronomia"},
+    {"Teste", NULL, NULL, NULL}
 };
-static const int TOTAL_MOCK_SONGS = 3;
+
+const int TOTAL_SONGS = 2;
+int songSelectedOption = 0;
+
+const SongInfo* obterMusicaSelecionada(void)
+{
+    return &songList[songSelectedOption];
+}
 
 // main menu
 void atualizarMenu(GameState *state) {
@@ -61,7 +69,7 @@ void atualizarSongSelect(GameState *state) {
     }
     if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
         songSelectedOption++;
-        if (songSelectedOption >= TOTAL_MOCK_SONGS) songSelectedOption = TOTAL_MOCK_SONGS - 1;
+        if (songSelectedOption >= TOTAL_SONGS) songSelectedOption = TOTAL_SONGS - 1;
     }
     if (IsKeyPressed(KEY_ENTER)) *state = PLAYING;
     if (IsKeyPressed(KEY_ESCAPE)) *state = MENU;
@@ -71,9 +79,9 @@ void desenharSongSelect(void) {
     int screenHeight = GetScreenHeight();
     DrawText("Lista de Músicas", screenWidth/2 - MeasureText("Lista de Músicas", 30)/2, screenHeight/5, 30, MAGENTA);
 
-    for (int i = 0; i < TOTAL_MOCK_SONGS; i++) {
+    for (int i = 0; i < TOTAL_SONGS; i++) {
         Color songColor = (i == songSelectedOption) ? MAGENTA : RAYWHITE;
-        DrawText(mockSongs[i], screenWidth/2 - MeasureText(mockSongs[i], 20)/2, screenHeight/3 + i*30, 20, songColor);
+        DrawText(songList[i].nome, screenWidth/2 - MeasureText(songList[i].nome, 20)/2, screenHeight/3 + i*30, 20, songColor);
     }
 
     DrawText("^v navegar | ENTER iniciar | ESC voltar",

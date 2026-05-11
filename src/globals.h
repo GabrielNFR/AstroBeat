@@ -20,4 +20,29 @@ typedef enum {
 } GameState;
 extern GameState gameState;
 
+typedef enum{
+    NOTA_GRAVE = 0,
+    NOTA_AGUDO = 1,
+    NOTA_LONGA = 2,
+    NOTA_DIREITA = 3,
+    NOTA_ESQUERDA = 4
+} Tiponota;
+
+typedef enum{
+    JULG_PENDENTE = 0,
+    JULG_PERFECT,
+    JULG_GREAT,
+    JULG_GOOD,
+    JULG_OK,
+    JULG_MISS
+}Julgamento;
+
+typedef struct {
+    int pontos;
+    int streak;
+    int maior_streak;
+    float multiplicador;
+    Julgamento ultima_nota;
+}Score;
+
 #endif

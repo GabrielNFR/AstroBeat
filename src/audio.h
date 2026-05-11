@@ -17,6 +17,7 @@ void pausarMusica(Audio *audio);
 void continuarMusica(Audio *audio);
 void pararMusica(Audio *audio);
 float obterTempoMusica(Audio *audio);
+float carregarVolumeConfigurado(void);
 void definirVolumeMusica(Audio *audio, float volume);
 void seekMusica(Audio *audio, float posicaoSegundos);
 void descarregarAudio(Audio *audio);

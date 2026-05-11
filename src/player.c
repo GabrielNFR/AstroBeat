@@ -32,6 +32,11 @@ void inicializarNave(Nave *jogador)
     {
         jogador->particulas[i].ativa = false;
     }
+
+    jogador->buffMultiplicador = false;
+    jogador->buffJanela = false;
+    jogador->tempoFimMult = 0.0f;
+    jogador->tempoFimJanela = 0.0f;
 }
 
 void atualizarNave(Nave *jogador, float deltaTime)
