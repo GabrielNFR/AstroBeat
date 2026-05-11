@@ -26,9 +26,9 @@ void desenharNotaAgudo(float x, float z)
 
 void desenharNotaDireita(float x, float z)
 {
-    float raio = 0.12f;
-    float comprimentoCorpo = 0.40f;
-    float comprimentoPonta = 0.26f;
+    float raio = 0.18f;
+    float comprimentoCorpo = 0.50f;
+    float comprimentoPonta = 0.34f;
 
     rlPushMatrix();
         rlTranslatef(x - comprimentoCorpo / 2.0f, 0.5f, z);
