@@ -65,3 +65,18 @@ void desenharNotaEsquerda(float x, float z)
 
     desenharGlow(x, z, YELLOW);
 }
+
+void desenharEfeitoAcerto(float x, float z, float tempoDecorrido, float duracaoTotal, Color cor)
+{
+    float progresso = tempoDecorrido / duracaoTotal;
+    if (progresso > 1.0f) progresso = 1.0f;
+
+    float expansaoMaxima = 3.0f;
+    float raioAtual = 0.5f + (expansaoMaxima * progresso);
+
+    float opacidade = 1.0f - progresso;
+    Color corOnda = Fade(cor, opacidade);
+
+    DrawCylinderWires((Vector3){x, 0.1f, z}, raioAtual, raioAtual, 0.05f, 16, corOnda);
+    DrawCylinderWires((Vector3){x, 0.05f, z}, raioAtual * 0.7f, raioAtual * 0.7f, 0.02f, 12, Fade(corOnda, opacidade * 0.5f));
+}

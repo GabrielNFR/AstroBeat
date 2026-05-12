@@ -111,59 +111,88 @@ void desenhar_notas(float tempo_atual){
     float posX[3] = {FAIXA_ESQUERDA, FAIXA_CENTRO, FAIXA_DIREITA};
     for (int i = 0; i < total_de_notas; i++) {
     if (array_notas[i].lane < 0 || array_notas[i].lane > 2) continue;
-    if (!array_notas[i].ativa || array_notas[i].finalizada) continue;
 
     float x = posX[array_notas[i].lane];
     float z = -80.0f + (tempo_atual - (array_notas[i].tempo - TEMPO_ATE_HIT)) * VEL_NOTAS;
 
-    // Verifica se a nota está na tela (notas longas olham cabeça e cauda)
-    if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].duracao > 0.0f) {
-        float zTail = z - array_notas[i].duracao * VEL_NOTAS;
-        if (z >= 15.0f - HIT_OFFSET && zTail >= 15.0f - HIT_OFFSET) continue;
-        if (z <= -80.0f && zTail <= -80.0f) continue;
-    } else {
-        if (z >= 15.0f - HIT_OFFSET || z <= -80.0f) continue;
+    if (array_notas[i].ativa && !array_notas[i].finalizada)
+    {
+        bool naTela = true;
+        // Verifica se a nota está na tela (notas longas olham cabeça e cauda)
+        if (array_notas[i].tipo == NOTA_LONGA && array_notas[i].duracao > 0.0f) {
+            float zTail = z - array_notas[i].duracao * VEL_NOTAS;
+            if (z >= 15.0f - HIT_OFFSET && zTail >= 15.0f - HIT_OFFSET) naTela = false;
+            if (z <= -80.0f && zTail <= -80.0f) naTela = false;
+        } else {
+            if (z >= 15.0f - HIT_OFFSET || z <= -80.0f) naTela = false;
+        }
+
+        if (naTela)
+        {
+            // Desenha conforme o tipo
+            switch (array_notas[i].tipo) {
+                case NOTA_GRAVE:
+                    desenharNotaGrave(x, z);
+                    break;
+                case NOTA_AGUDO:
+                    desenharNotaAgudo(x, z);
+                    break;
+                case NOTA_LONGA:
+                {
+                    float zBodyTotal = array_notas[i].duracao * VEL_NOTAS;
+
+                    if (array_notas[i].holding == 1 || array_notas[i].holding == -1)
+                    {
+                        float consumo_visual = array_notas[i].consumo * VEL_NOTAS;
+                        float zBodyRestante = zBodyTotal - consumo_visual;
+                        if (zBodyRestante <= 0.0f) break; // totalmente consumida
+
+                        // Consome da frente (cabeça) para trás (cauda)
+                        float z_cauda   = z - zBodyTotal;  // cauda original, não mexe
+                        float z_frente  = z - consumo_visual; // frente avança em direção à cauda
+                        float zCenter   = (z_frente + z_cauda) / 2.0f;
+
+                        DrawCube((Vector3){x, 0.5f, zCenter}, 0.5f, 0.5f, zBodyRestante, WHITE);
+                    }
+                    else
+                    {
+                        float zCenter = z - (zBodyTotal / 2.0f);
+                        DrawCube((Vector3){x, 0.5f, zCenter}, 0.5f, 0.5f, zBodyTotal, WHITE);
+                    }
+                    break;
+                }
+                case NOTA_DIREITA:
+                    desenharNotaDireita(x, z);
+                    break;
+                case NOTA_ESQUERDA:
+                    desenharNotaEsquerda(x, z);
+                    break;
+            }
+        }
     }
 
-    // Desenha conforme o tipo
-    switch (array_notas[i].tipo) {
-        case NOTA_GRAVE:
-            desenharNotaGrave(x, z);
-            break;
-        case NOTA_AGUDO:
-            desenharNotaAgudo(x, z);
-            break;
-        case NOTA_LONGA:
+    if (array_notas[i].mostrarEfeito == 1)
+    {
+        float tempoDecorrido = tempo_atual - array_notas[i].tempoAcerto;
+        float duracaoTotal = 0.4f;
+
+        if (tempoDecorrido <= duracaoTotal)
         {
-            float zBodyTotal = array_notas[i].duracao * VEL_NOTAS;
+            Color corOnda;
+            if (array_notas[i].tipo == NOTA_GRAVE)      corOnda = BLUE;
+            else if (array_notas[i].tipo == NOTA_AGUDO)    corOnda = RED;
+            else if (array_notas[i].tipo == NOTA_DIREITA)  corOnda = GREEN;
+            else if (array_notas[i].tipo == NOTA_ESQUERDA) corOnda = YELLOW;
+            else                                         corOnda = WHITE;
 
-            if (array_notas[i].holding == 1 || array_notas[i].holding == -1)
-            {
-                float consumo_visual = array_notas[i].consumo * VEL_NOTAS;
-                float zBodyRestante = zBodyTotal - consumo_visual;
-                if (zBodyRestante <= 0.0f) break;  // totalmente consumida
-
-                // Consome da frente (cabeça) para trás (cauda)
-                float z_cauda   = z - zBodyTotal;           // cauda original, não mexe
-                float z_frente  = z - consumo_visual;       // frente avança em direção à cauda
-                float zCenter   = (z_frente + z_cauda) / 2.0f;
-
-                DrawCube((Vector3){x, 0.5f, zCenter}, 0.5f, 0.5f, zBodyRestante, WHITE);
-            }
-            else
-            {
-                float zCenter = z - (zBodyTotal / 2.0f);
-                DrawCube((Vector3){x, 0.5f, zCenter}, 0.5f, 0.5f, zBodyTotal, WHITE);
-            }
-            break;
+            float zAcertoFixo = -HIT_OFFSET;
+            desenharEfeitoAcerto(x, zAcertoFixo, tempoDecorrido, duracaoTotal, corOnda);
         }
-        case NOTA_DIREITA:
-            desenharNotaDireita(x, z);
-            break;
-        case NOTA_ESQUERDA:
-            desenharNotaEsquerda(x, z);
-            break;
+        else
+        {
+            array_notas[i].mostrarEfeito = 0;
         }
+    }
     }
 }
 
@@ -176,6 +205,8 @@ void resetar_notas(void)
         array_notas[i].holding = 0;
         array_notas[i].consumo = 0.0f;
         array_notas[i].pontos = 100;
+        array_notas[i].mostrarEfeito = 0;
+        array_notas[i].tempoAcerto = 0.0f;
     }
 }
 
@@ -237,6 +268,8 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
                 {
                     hitPorTipo[array_notas[i].tipo] = true;
                     array_notas[i].finalizada = 1;
+                    array_notas[i].mostrarEfeito = 1;
+                    array_notas[i].tempoAcerto = tempo_atual;
                     array_notas[i].pontos = jogador->buffMultiplicador ? 200 : 100;
                     if (jogador->buffMultiplicador) printf("2x PONTOS\n");
 
