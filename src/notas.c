@@ -238,6 +238,7 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
             {
                 array_notas[i].finalizada = 1;
                 array_notas[i].resultado = JULG_MISS;
+                errar_nota(score);
                 printf("LONG MISS (cauda saiu da tela)\n");
                 fflush(stdout);
                 continue;
@@ -275,19 +276,19 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
 
                     if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
-                        sistema_pontos(score,JULG_PERFECT);
+                        sistema_pontos(score,JULG_PERFECT, array_notas[i].pontos);
                         printf("PERFECT\n");
                     } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
-                        sistema_pontos(score,JULG_GREAT);
+                        sistema_pontos(score,JULG_GREAT, array_notas[i].pontos);
                         printf("GREAT\n");
                     } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
-                        sistema_pontos(score,JULG_GOOD);
+                        sistema_pontos(score,JULG_GOOD, array_notas[i].pontos);
                         printf("GOOD\n");
                     } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
-                        sistema_pontos(score,JULG_OK);
+                        sistema_pontos(score,JULG_OK, array_notas[i].pontos);
                         printf("OK\n");
                     }
                     fflush(stdout);
