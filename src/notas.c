@@ -77,7 +77,6 @@ void leitura_arquivo_coletaveis(const char *caminho)
 {
     if (caminho == NULL)
     {
-        total_de_notas = 0;
         return;
     }
 
