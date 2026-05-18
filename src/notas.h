@@ -14,6 +14,7 @@ typedef struct{
     float tempo;
     float duracao;
     float consumo;
+    float tempoAcerto;
     Tiponota tipo;
     Julgamento resultado;
     int lane;
@@ -21,6 +22,7 @@ typedef struct{
     int finalizada;
     int pontos;
     int holding;
+    int mostrarEfeito;
 }Notas;
 
 extern Notas array_notas[MAX_NOTAS];
