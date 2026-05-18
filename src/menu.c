@@ -11,10 +11,11 @@ static int menuSelectedOption = 0;
 const SongInfo songList[] = {
     {"Elektronomia", "songs/Elektronomia.ogg", "mapasMusicas/mapaElektronomia.txt", "mapasColetaveis/mapaElektronomia.txt"},
     {"Spektrem", "songs/Spektrem.mp3", "mapasMusicas/mapaSpektrem.txt", "mapasColetaveis/mapaSpektrem.txt"},
+    {"DK Invincible", "songs/DKInvincible.mp3", "mapasMusicas/mapaDKInvincible.txt", "mapasColetaveis/mapaDKInvincible.txt"},
     {"Teste", NULL, NULL, NULL}
 };
 
-const int TOTAL_SONGS = 3;
+const int TOTAL_SONGS = 4;
 int songSelectedOption = 0;
 
 const SongInfo* obterMusicaSelecionada(void)
