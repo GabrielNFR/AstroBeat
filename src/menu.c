@@ -9,7 +9,7 @@ static int menuSelectedOption = 0;
 // lista de musicas
 
 const SongInfo songList[] = {
-    {"Sky High", "songs/Elektronomia.ogg", "mapasMusicas/mapaElektronomia.txt", "mapasColetaveis/mapaElektronomia.txt"},
+    {"Elektronomia", "songs/Elektronomia.ogg", "mapasMusicas/mapaElektronomia.txt", "mapasColetaveis/mapaElektronomia.txt"},
     {"Spektrem", "songs/Spektrem.mp3", "mapasMusicas/mapaSpektrem.txt", "mapasColetaveis/mapaSpektrem.txt"},
     {"Teste", NULL, NULL, NULL}
 };
