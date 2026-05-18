@@ -10,10 +10,11 @@ static int menuSelectedOption = 0;
 
 const SongInfo songList[] = {
     {"Sky High", "songs/Elektronomia.ogg", "mapasMusicas/mapaElektronomia.txt", "mapasColetaveis/mapaElektronomia.txt"},
+    {"Spektrem", "songs/Spektrem.mp3", "mapasMusicas/mapaSpektrem.txt", "mapasColetaveis/mapaSpektrem.txt"},
     {"Teste", NULL, NULL, NULL}
 };
 
-const int TOTAL_SONGS = 2;
+const int TOTAL_SONGS = 3;
 int songSelectedOption = 0;
 
 const SongInfo* obterMusicaSelecionada(void)
