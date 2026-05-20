@@ -23,6 +23,7 @@ typedef struct{
     int pontos;
     int holding;
     int mostrarEfeito;
+    float tickTimer;
 }Notas;
 
 extern Notas array_notas[MAX_NOTAS];

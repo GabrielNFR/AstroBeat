@@ -31,22 +31,22 @@ float multiplicador_streak(int streak){
 
     return 1.0f;
 }
-
-void sistema_pontos(Score * score, Julgamento nota, int pontosBase){
+void aumentar_streak(Score *score){
     score->streak++;
-
+    
     if (score->streak > score->maior_streak){
         score->maior_streak=score->streak;
     }
+    
+    score->multiplicador= multiplicador_streak(score->streak);
+    
+}
 
+void adicionar_pontos(Score *score,Julgamento nota,int pontosBase){
     float multjulg= multiplicador_julgamento(nota);
 
-    score->multiplicador= multiplicador_streak(score->streak);
-
     int pontosganhos= (pontosBase * multjulg * score->multiplicador);
-
     score->pontos += pontosganhos;
-
     score->ultima_nota = nota;
 
 }

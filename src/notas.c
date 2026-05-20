@@ -275,19 +275,23 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
 
                     if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
-                        sistema_pontos(score,JULG_PERFECT, array_notas[i].pontos);
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_PERFECT, array_notas[i].pontos);
                         printf("PERFECT\n");
                     } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
-                        sistema_pontos(score,JULG_GREAT, array_notas[i].pontos);
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_GREAT, array_notas[i].pontos);
                         printf("GREAT\n");
                     } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
-                        sistema_pontos(score,JULG_GOOD, array_notas[i].pontos);
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_GOOD, array_notas[i].pontos);
                         printf("GOOD\n");
                     } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
-                        sistema_pontos(score,JULG_OK, array_notas[i].pontos);
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_OK, array_notas[i].pontos);
                         printf("OK\n");
                     }
                     fflush(stdout);
@@ -302,20 +306,29 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
                 {
                     hitPorTipo[array_notas[i].tipo] = true;
                     array_notas[i].holding = 1;
+                    array_notas[i].tickTimer = 0.0f;
                     array_notas[i].pontos = jogador->buffMultiplicador ? 200 : 100;
                     if (jogador->buffMultiplicador) printf("2x PONTOS (LONG)\n");
 
                     if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_PERFECT, array_notas[i].pontos);
                         printf("LONG HEAD PERFECT\n");
                     } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_GREAT, array_notas[i].pontos);
                         printf("LONG HEAD GREAT\n");
                     } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_GOOD, array_notas[i].pontos);
                         printf("LONG HEAD GOOD\n");
                     } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
+                        aumentar_streak(score);
+                        adicionar_pontos(score,JULG_OK, array_notas[i].pontos);
                         printf("LONG HEAD OK\n");
                     }
                     fflush(stdout);
@@ -331,18 +344,29 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
             if (!TeclaSeguradaParaTipo(NOTA_LONGA))
             {
                 array_notas[i].holding = -1;
+                errar_nota(score);
                 printf("LONG ABANDONADA\n");
                 fflush(stdout);
             }
             else if (tempo_atual >= tempo_fim)
             {
                 array_notas[i].finalizada = 1;
+                aumentar_streak(score);
+                adicionar_pontos(score,JULG_GREAT,50);
                 printf("LONG COMPLETA\n");
                 fflush(stdout);
             }
             else
             {
                 array_notas[i].consumo += deltaTime;
+                array_notas[i].tickTimer += deltaTime;
+
+                if(array_notas[i].tickTimer >= 0.1f){
+                    array_notas[i].tickTimer = 0.0f;
+                    score->pontos +=10 * score->multiplicador;
+                }
+                }
+
                 if (array_notas[i].consumo > array_notas[i].duracao)
                 {
                     array_notas[i].consumo = array_notas[i].duracao;
@@ -350,4 +374,5 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
             }
         }
     }
-}
+
+
