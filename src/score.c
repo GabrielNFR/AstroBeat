@@ -100,3 +100,39 @@ void draw_sistema_pontos(Score*score){
     DrawText(TextFormat("%.0fx", score->multiplicador),20, 100, 30, WHITE);
     DrawText(HitToString(score->ultima_nota),screenWidth- larguraTexto - 20,screenHeight - 60,40,GREEN);
 }
+
+void draw_Resultados(){
+    
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+
+    const char *titulo =
+        "FIM DE MUSICA";
+
+    int tituloSize = 40;
+
+    int larguraTitulo =
+        MeasureText(titulo, tituloSize);
+
+    DrawText(
+        titulo,
+        (screenWidth - larguraTitulo)/2,40,tituloSize,WHITE);
+
+    const char *texto =
+        "APERTE ENTER PARA VOLTAR AO MENU";
+
+    int textoSize = 20;
+
+    int larguraTexto =
+        MeasureText(texto, textoSize);
+
+    DrawText(texto,screenWidth - larguraTexto - 20, screenHeight - 40, textoSize, GRAY);
+}
+
+void atualizarResultados(GameState *gameState)
+{
+    if (IsKeyPressed(KEY_ENTER))
+    {
+        *gameState = MENU;
+    }
+}

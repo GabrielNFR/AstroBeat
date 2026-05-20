@@ -12,6 +12,11 @@
 
 GameState gameState = MENU;
 
+bool musicaTerminou(Audio *audio)
+{
+    return !IsMusicStreamPlaying(audio->musica);
+}
+
 int main(void) {
     InitWindow(800, 450, "AstroBeat");
     SetExitKey(0);
@@ -110,11 +115,18 @@ int main(void) {
                         atualizarColetavel(tempo_jogo);
                         verificarColisao(&nave, tempo_jogo);
                         
+                        if (musicaTerminou(&audio)){
+                            gameState = RESULTS;
+                        }
                     }
                     break;
 
                 case PAUSED:
                     atualizarPause(&gameState);
+                    break;
+
+                case RESULTS:
+                    atualizarResultados(&gameState);
                     break;
 
                 case QUIT:
@@ -240,6 +252,13 @@ int main(void) {
 
                         desenharPause();
                         DrawFPS(10, 10);
+                        break;
+
+                    case RESULTS:
+                        ClearBackground(BLACK);
+
+                        draw_Resultados();
+
                         break;
 
                     case QUIT:

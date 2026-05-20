@@ -11,6 +11,8 @@ void adicionar_pontos(Score *score,Julgamento nota,int pontosBase);
 void errar_nota(Score * score);
 void draw_sistema_pontos(Score *score);
 void init_sistema_pontos(Score *score);
+void draw_Resultados(void);
+void atualizarResultados(GameState *gameState);
 
 
 #endif

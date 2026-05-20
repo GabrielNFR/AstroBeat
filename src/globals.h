@@ -16,6 +16,7 @@ typedef enum {
     SETTINGS,
     PLAYING,
     PAUSED,
+    RESULTS,
     QUIT
 } GameState;
 extern GameState gameState;
