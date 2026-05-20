@@ -18,7 +18,11 @@ bool musicaTerminou(Audio *audio)
 }
 
 int main(void) {
-    InitWindow(800, 450, "AstroBeat");
+    int windowedWidth = 1280;
+    int windowedHeight = 720;
+    bool windowSizeSaved = false;
+    
+    InitWindow(windowedWidth, windowedHeight, "AstroBeat");
     SetExitKey(0);
     SetTargetFPS(144);
 
@@ -65,6 +69,30 @@ int main(void) {
                 tempo_jogo = obterTempoMusica(&audio) - tempo_inicio_musica;
                 if (tempo_jogo < 0.0f) {
                     tempo_jogo = 0.0f;
+                }
+            }
+
+            if (IsKeyPressed(KEY_F11)) {
+                if (!IsWindowState(FLAG_WINDOW_UNDECORATED)) {
+                    windowedWidth = GetScreenWidth();
+                    windowedHeight = GetScreenHeight();
+                    windowSizeSaved = true;
+
+                    int monitor = GetCurrentMonitor();
+                    Vector2 pos = GetMonitorPosition(monitor);
+                    SetWindowPosition((int)pos.x, (int)pos.y);
+                    SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+                    SetWindowState(FLAG_WINDOW_UNDECORATED);
+                } else {
+                    ClearWindowState(FLAG_WINDOW_UNDECORATED);
+                    SetWindowSize(windowedWidth, windowedHeight);
+                    // Centraliza a janela após restaurar
+                    int monitor = GetCurrentMonitor();
+                    Vector2 pos = GetMonitorPosition(monitor);
+                    SetWindowPosition(
+                        (int)pos.x + (GetMonitorWidth(monitor) - windowedWidth) / 2,
+                        (int)pos.y + (GetMonitorHeight(monitor) - windowedHeight) / 2
+                    );
                 }
             }
 
