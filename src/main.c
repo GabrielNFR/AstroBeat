@@ -12,11 +12,6 @@
 
 GameState gameState = MENU;
 
-bool musicaTerminou(Audio *audio)
-{
-    return !IsMusicStreamPlaying(audio->musica);
-}
-
 int main(void) {
     int windowedWidth = 1280;
     int windowedHeight = 720;
@@ -144,6 +139,7 @@ int main(void) {
                         verificarColisao(&nave, tempo_jogo);
                         
                         if (musicaTerminou(&audio)){
+                            calcularPrecisao(&score);
                             gameState = RESULTS;
                         }
                     }
@@ -171,6 +167,7 @@ int main(void) {
                     resetar_notas();
                     limparColetavel();
                     leitura_arquivo_musica(song->caminhoBeatmap);
+                    calcularTotais(&score);
                     leitura_arquivo_coletaveis(song->caminhoColetaveis);
                     
                     if (audio.musicaCarregada)
@@ -285,7 +282,7 @@ int main(void) {
                     case RESULTS:
                         ClearBackground(BLACK);
 
-                        draw_Resultados();
+                        draw_Resultados(&score);
 
                         break;
 

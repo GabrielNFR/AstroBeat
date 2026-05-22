@@ -21,5 +21,6 @@ float carregarVolumeConfigurado(void);
 void definirVolumeMusica(Audio *audio, float volume);
 void seekMusica(Audio *audio, float posicaoSegundos);
 void descarregarAudio(Audio *audio);
+bool musicaTerminou(Audio *audio);
 
 #endif

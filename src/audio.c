@@ -145,3 +145,8 @@ void descarregarAudio(Audio *audio)
         CloseAudioDevice();
     }
 }
+
+bool musicaTerminou(Audio *audio)
+{
+    return !IsMusicStreamPlaying(audio->musica);
+}

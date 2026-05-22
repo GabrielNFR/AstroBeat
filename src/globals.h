@@ -38,12 +38,30 @@ typedef enum{
     JULG_MISS
 }Julgamento;
 
+typedef enum{
+    LINHA_GRAVE = 0,
+    LINHA_AGUDO,
+    LINHA_LONGA,
+    LINHA_MOVIMENTO,
+    LINHA_GERAL,
+    TOTAL_LINHAS
+}LinhasMatriz;
+
+typedef enum{
+    COL_TOTAL = 0,
+    COL_ACERTOS,
+    COL_MISS,
+    COL_PRECISAO,
+    TOTAL_COLUNAS
+}ColunasMatriz;
+
 typedef struct {
     int pontos;
     int streak;
     int maior_streak;
     float multiplicador;
     Julgamento ultima_nota;
+    float matrizResultados[TOTAL_LINHAS][TOTAL_COLUNAS];
 }Score;
 
 #endif

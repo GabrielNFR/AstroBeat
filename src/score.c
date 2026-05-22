@@ -1,9 +1,22 @@
 #include "raylib.h"
+#include "globals.h"
 #include "notas.h"
 #include "score.h"
 #include "buffs.h"
 #include <stdio.h>
 #include <math.h>
+
+const char *nomesLinhas[TOTAL_LINHAS] = {
+    "GRAVE",
+    "AGUDO",
+    "LONGA",
+    "MOVIMENTO",
+    "GERAL"
+};
+
+int teste = TOTAL_COLUNAS;
+
+const char *nomesColunas[TOTAL_COLUNAS] = {"TOTAL","ACERTOS","MISS","PRECISAO"};
 
 void init_sistema_pontos(Score *score){
     score->pontos = 0;
@@ -11,6 +24,11 @@ void init_sistema_pontos(Score *score){
     score->maior_streak = 0;
     score->multiplicador = 1.0f;
     score->ultima_nota = JULG_PENDENTE;
+    for(int lin = 0; lin < TOTAL_LINHAS; lin++){
+        for(int col = 0; col < TOTAL_COLUNAS; col++){
+            score->matrizResultados[lin][col] = 0;
+            }
+        }
 }
 
 float multiplicador_julgamento(Julgamento nota){
@@ -101,7 +119,7 @@ void draw_sistema_pontos(Score*score){
     DrawText(HitToString(score->ultima_nota),screenWidth- larguraTexto - 20,screenHeight - 60,40,GREEN);
 }
 
-void draw_Resultados(){
+void draw_Resultados(Score *score){
     
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
@@ -117,6 +135,32 @@ void draw_Resultados(){
     DrawText(
         titulo,
         (screenWidth - larguraTitulo)/2,40,tituloSize,WHITE);
+    
+    int startX = 180;
+    int startY = 120;
+
+    int cellWidth = 140;
+    int cellHeight = 40;
+    DrawText("TIPO",startX - 140,startY,20,WHITE);
+
+    for(int col = 0;col < TOTAL_COLUNAS;col++){
+        DrawText(nomesColunas[col],startX + (col * cellWidth),startY,20,WHITE); 
+    }
+
+    for(int lin = 0;lin < TOTAL_LINHAS;lin++){
+        DrawText(nomesLinhas[lin],startX - 140,startY + ((lin + 1) * cellHeight),20,WHITE);
+
+        for(int col = 0;col < TOTAL_COLUNAS;col++){
+            float valor =score->matrizResultados[lin][col];
+            if(col == COL_PRECISAO){
+                DrawText(TextFormat("%.1f%%", valor),startX + (col * cellWidth),startY + ((lin + 1) * cellHeight),20,GREEN);
+        } 
+
+        else{
+            DrawText(TextFormat("%.0f", valor),startX + (col * cellWidth),startY + ((lin + 1) * cellHeight),20,WHITE);
+        }
+    }
+    }
 
     const char *texto =
         "APERTE ENTER PARA VOLTAR AO MENU";
@@ -134,5 +178,64 @@ void atualizarResultados(GameState *gameState)
     if (IsKeyPressed(KEY_ENTER))
     {
         *gameState = MENU;
+    }
+}
+
+LinhasMatriz tipoParaLinha(Tiponota tipo)
+{
+    switch(tipo)
+    {
+        case NOTA_GRAVE:
+            return LINHA_GRAVE;
+
+        case NOTA_AGUDO:
+            return LINHA_AGUDO;
+
+        case NOTA_LONGA:
+            return LINHA_LONGA;
+
+        case NOTA_DIREITA:
+        case NOTA_ESQUERDA:
+            return LINHA_MOVIMENTO;
+
+        default:
+            return LINHA_GERAL;
+    }
+}
+
+void calcularTotais(Score *score){
+    for(int i = 0;i < total_de_notas;i++){
+        LinhasMatriz linha =  tipoParaLinha(array_notas[i].tipo);
+
+        score->matrizResultados[linha][COL_TOTAL]++;
+        score->matrizResultados[LINHA_GERAL][COL_TOTAL]++;
+}
+}
+
+void registrarAcerto(Score *score,Tiponota tipo){
+    LinhasMatriz linha =  tipoParaLinha(tipo);
+
+    score->matrizResultados[linha][COL_ACERTOS]++;
+    score->matrizResultados[LINHA_GERAL][COL_ACERTOS]++;
+}
+
+void registrarmiss(Score *score,Tiponota tipo){
+    LinhasMatriz linha =  tipoParaLinha(tipo);
+    score->matrizResultados[linha][COL_MISS]++;
+    score->matrizResultados[LINHA_GERAL][COL_MISS]++;
+}
+
+void calcularPrecisao(Score *score){
+    for(int i=0;i<TOTAL_LINHAS;i++){
+        float total = score->matrizResultados[i][COL_TOTAL];
+        float acertos =score->matrizResultados[i][COL_ACERTOS];
+
+        if(total > 0){
+             score->matrizResultados[i][COL_PRECISAO] =(acertos / total) * 100.0f;
+        }
+
+         else{
+            score->matrizResultados[i][COL_PRECISAO]=0.0f;
+        }
     }
 }
