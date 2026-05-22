@@ -5,6 +5,8 @@
 #include "raylib.h"
 #include "audio.h"
 
+#define TOTAL_SONGS 5
+
 typedef struct {
     const char *nome;
     const char *caminhoMusica;
@@ -13,7 +15,6 @@ typedef struct {
 }SongInfo;
 
 extern const SongInfo songList[];
-extern const int TOTAL_SONGS;
 extern int songSelectOption;
 
 const SongInfo* obterMusicaSelecionada(void);

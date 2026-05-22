@@ -8,6 +8,7 @@
 #include "score.h"
 #include "rlgl.h"
 #include "audio.h"
+#include "highscores.h"
 #include <stdio.h>
 
 GameState gameState = MENU;
@@ -50,6 +51,9 @@ int main(void) {
     
     float tempo_jogo = 0.0f;
     float tempo_inicio_musica = 0.0f;
+
+    carregarHighscores();
+
     while (true) {
             if (WindowShouldClose() || gameState == QUIT) {
                 break;
@@ -140,6 +144,7 @@ int main(void) {
                         
                         if (musicaTerminou(&audio)){
                             calcularPrecisao(&score);
+                            salvarHighscore(songSelectOption, score.pontos);
                             gameState = RESULTS;
                         }
                     }
@@ -151,6 +156,11 @@ int main(void) {
 
                 case RESULTS:
                     atualizarResultados(&gameState);
+                    break;
+                
+                case HIGHSCORES:
+                    atualizarHighscores(&gameState);
+                    atualizarFundoMenu(&env, deltaTime);
                     break;
 
                 case QUIT:
@@ -286,6 +296,15 @@ int main(void) {
 
                         break;
 
+                    case HIGHSCORES:
+                        BeginMode3D(cameraBG);
+                            rlDisableDepthMask();
+                            desenharFundoMenu(&env);
+                            rlEnableDepthMask();
+                        EndMode3D();
+                        desenharHighscores();
+                        break;
+                    
                     case QUIT:
                         break;
                 }

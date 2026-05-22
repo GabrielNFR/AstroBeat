@@ -16,12 +16,11 @@ const SongInfo songList[] = {
     {"Teste", NULL, NULL, NULL}
 };
 
-const int TOTAL_SONGS = 5;
-int songSelectedOption = 0;
+int songSelectOption = 0;
 
 const SongInfo* obterMusicaSelecionada(void)
 {
-    return &songList[songSelectedOption];
+    return &songList[songSelectOption];
 }
 
 // main menu
@@ -32,14 +31,16 @@ void atualizarMenu(GameState *state) {
     }
     if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
         menuSelectedOption++;
-        if (menuSelectedOption > 1) menuSelectedOption = 1;
+        if (menuSelectedOption > 2) menuSelectedOption = 2;
     }
     if (IsKeyPressed(KEY_ENTER)) {
         if (menuSelectedOption == 0) {
             *state = SONG_SELECT;
-            songSelectedOption = 0;
-        } else {
+            songSelectOption = 0;
+        } else if (menuSelectedOption == 1){
             *state = SETTINGS;
+        } else if (menuSelectedOption == 2){
+            *state = HIGHSCORES;
         }
     }
 
@@ -55,9 +56,11 @@ void desenharMenu(void) {
 
     Color opt1Color = (menuSelectedOption == 0) ? MAGENTA : RAYWHITE;
     Color opt2Color = (menuSelectedOption == 1) ? MAGENTA : RAYWHITE;
+    Color opt3Color = (menuSelectedOption == 2) ? MAGENTA : RAYWHITE;
 
     DrawText("Lista de Músicas", screenWidth/2 - MeasureText("Lista de Músicas", 20)/2, screenHeight/2, 20, opt1Color);
     DrawText("Configurações", screenWidth/2 - MeasureText("Configurações", 20)/2, screenHeight/2 + 30, 20, opt2Color);
+    DrawText("High Scores", screenWidth/2 - MeasureText("High Scores", 20)/2, screenHeight/2 + 60, 20, opt3Color);
 
     DrawText("^v para navegar | ENTER para selecionar",
              screenWidth/2 - MeasureText("^v para navegar | ENTER para selecionar", 16)/2,
@@ -67,12 +70,12 @@ void desenharMenu(void) {
 // song select
 void atualizarSongSelect(GameState *state) {
     if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
-        songSelectedOption--;
-        if (songSelectedOption < 0) songSelectedOption = 0;
+        songSelectOption--;
+        if (songSelectOption < 0) songSelectOption = 0;
     }
     if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-        songSelectedOption++;
-        if (songSelectedOption >= TOTAL_SONGS) songSelectedOption = TOTAL_SONGS - 1;
+        songSelectOption++;
+        if (songSelectOption >= TOTAL_SONGS) songSelectOption = TOTAL_SONGS - 1;
     }
     if (IsKeyPressed(KEY_ENTER)) *state = PLAYING;
     if (IsKeyPressed(KEY_ESCAPE)) *state = MENU;
@@ -83,7 +86,7 @@ void desenharSongSelect(void) {
     DrawText("Lista de Músicas", screenWidth/2 - MeasureText("Lista de Músicas", 30)/2, screenHeight/5, 30, MAGENTA);
 
     for (int i = 0; i < TOTAL_SONGS; i++) {
-        Color songColor = (i == songSelectedOption) ? MAGENTA : RAYWHITE;
+        Color songColor = (i == songSelectOption) ? MAGENTA : RAYWHITE;
         DrawText(songList[i].nome, screenWidth/2 - MeasureText(songList[i].nome, 20)/2, screenHeight/3 + i*30, 20, songColor);
     }
 

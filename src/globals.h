@@ -14,6 +14,7 @@ typedef enum {
     MENU,
     SONG_SELECT,
     SETTINGS,
+    HIGHSCORES,
     PLAYING,
     PAUSED,
     RESULTS,
