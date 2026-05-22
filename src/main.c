@@ -136,7 +136,8 @@ int main(void) {
                             fflush(stdout);
                         }
                         atualizarNave(&nave, deltaTime);
-                        atualizarCenario(&env, deltaTime);
+                        atualizarCenario(&env, deltaTime, tempo_jogo, songSelectOption);
+                        camera.fovy += (env.fovAlvo - camera.fovy) * deltaTime * 3.0f;
                         atualizar_notas(tempo_jogo);
                         verificarAcertos(&nave, &score, tempo_jogo, deltaTime);
                         atualizarColetavel(tempo_jogo);
@@ -151,6 +152,7 @@ int main(void) {
                     break;
 
                 case PAUSED:
+                    camera.fovy += (env.fovAlvo - camera.fovy) * deltaTime * 3.0f;
                     atualizarPause(&gameState);
                     break;
 

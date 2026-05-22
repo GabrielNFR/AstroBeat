@@ -9,6 +9,8 @@
 typedef struct Environment {
     Vector3 posicoes[QTD_ESTRELAS];
     float velocidade;
+    float fovAlvo;
+    float rotSpeedMult;
 
     Model sphere;
     float rotacaoSphere;
@@ -20,7 +22,7 @@ typedef struct Environment {
 void inicializarCenario(Env *env);
 void atualizarFundo(Env *env, float deltaTime);
 void atualizarFundoMenu(Env *env, float deltaTime);
-void atualizarCenario(Env *env, float deltaTime);
+void atualizarCenario(Env *env, float deltaTime, float tempoAtual, int songIndex);
 void desenharFundo(Env *env);
 void desenharFundoMenu(Env *env);
 void desenharPistaEstrelas(Env *env);

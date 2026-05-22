@@ -39,10 +39,23 @@ void inicializarCenario(Env *env)
 }
 
 
-void atualizarCenario(Env *env, float deltaTime)
+void atualizarCenario(Env *env, float deltaTime, float tempoAtual, int songIndex)
 {
+    float multVelocidade = 1.0f;
+    env->rotSpeedMult = 1.0f;
+    env->fovAlvo = 60.0f;
+
+    if (songIndex == 0) {
+        if ((tempoAtual >= 47.14f && tempoAtual <= 77.5f) ||
+            (tempoAtual >= 191.55f && tempoAtual <= 221.5f)) {
+            multVelocidade = 2.5f;
+            env->fovAlvo = 80.0f;
+            env->rotSpeedMult = 3.0f;
+        }
+    }
+    
     for (int i = 0; i < QTD_ESTRELAS; i++) {
-        env->posicoes[i].z += env->velocidade * deltaTime;
+        env->posicoes[i].z += env->velocidade * deltaTime * multVelocidade;
 
         if (env->posicoes[i].z > 10.0f) {
             env->posicoes[i].z -= 60.0f;
@@ -58,7 +71,7 @@ void atualizarCenario(Env *env, float deltaTime)
 
 void atualizarFundo(Env *env, float deltaTime)
 {
-    env->rotacaoSphere += 5.0f * deltaTime;
+    env->rotacaoSphere += 5.0f * deltaTime * env->rotSpeedMult;
     Matrix rotateBase = MatrixRotateX(90.0f * DEG2RAD);
     Matrix rotateGiro = MatrixRotateZ(env->rotacaoSphere * DEG2RAD);
     env->sphere.transform = MatrixMultiply(rotateBase, rotateGiro);
