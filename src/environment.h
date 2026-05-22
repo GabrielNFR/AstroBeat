@@ -11,6 +11,7 @@ typedef struct Environment {
     float velocidade;
     float fovAlvo;
     float rotSpeedMult;
+    float multVelocidade;
 
     Model sphere;
     float rotacaoSphere;
@@ -27,5 +28,6 @@ void desenharFundo(Env *env);
 void desenharFundoMenu(Env *env);
 void desenharPistaEstrelas(Env *env);
 void descarregarCenario(Env *env);
+void aplicarIntensidade(Env *env, float tempoAtual, int songIndex);
 
 #endif

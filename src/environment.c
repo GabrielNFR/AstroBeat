@@ -38,8 +38,7 @@ void inicializarCenario(Env *env)
     }
 }
 
-
-void atualizarCenario(Env *env, float deltaTime, float tempoAtual, int songIndex)
+void aplicarIntensidade(Env *env, float tempoAtual, int songIndex)
 {
     float multVelocidade = 1.0f;
     env->rotSpeedMult = 1.0f;
@@ -53,9 +52,24 @@ void atualizarCenario(Env *env, float deltaTime, float tempoAtual, int songIndex
             env->rotSpeedMult = 3.0f;
         }
     }
+    else if (songIndex == 1) {
+        if ((tempoAtual >= 50.4f && tempoAtual <= 95.3f) ||
+            (tempoAtual >= 187.31f && tempoAtual <= 230.0f)) {
+            multVelocidade = 2.5f;
+            env->fovAlvo = 80.0f;
+            env->rotSpeedMult = 3.0f;
+        }
+    }
+
+    env->multVelocidade = multVelocidade;
+}
+
+void atualizarCenario(Env *env, float deltaTime, float tempoAtual, int songIndex)
+{
+    aplicarIntensidade(env, tempoAtual, songIndex);
     
     for (int i = 0; i < QTD_ESTRELAS; i++) {
-        env->posicoes[i].z += env->velocidade * deltaTime * multVelocidade;
+        env->posicoes[i].z += env->velocidade * deltaTime * env->multVelocidade;
 
         if (env->posicoes[i].z > 10.0f) {
             env->posicoes[i].z -= 60.0f;
