@@ -4,16 +4,62 @@
 #include <math.h>
 #include <rlgl.h>
 
+static Model modeloNotaAzul;
+static bool modeloNotaAzulCarregado = false;
+
 static void desenharGlow(float x, float z, Color cor)
 {
     DrawSphere((Vector3){x, 0.5f, z}, 0.48f, Fade(cor, 0.12f));
     DrawSphere((Vector3){x, 0.5f, z}, 0.36f, Fade(cor, 0.22f));
 }
 
+void carregarModelosNotas(void)
+{
+    modeloNotaAzul = LoadModel("assets/azulv1.vox");
+    modeloNotaAzulCarregado = IsModelValid(modeloNotaAzul);
+
+    if (modeloNotaAzulCarregado)
+    {
+        BoundingBox limites = GetModelBoundingBox(modeloNotaAzul);
+        Vector3 centro = {
+            (limites.min.x + limites.max.x) / 2.0f,
+            (limites.min.y + limites.max.y) / 2.0f,
+            (limites.min.z + limites.max.z) / 2.0f
+        };
+
+        Matrix centralizar = MatrixTranslate(-centro.x, -centro.y, -centro.z);
+        Matrix escala = MatrixScale(0.085f, 0.085f, 0.085f);
+
+        modeloNotaAzul.transform = MatrixMultiply(centralizar, escala);
+    }
+}
+
+void descarregarModelosNotas(void)
+{
+    if (modeloNotaAzulCarregado)
+    {
+        UnloadModel(modeloNotaAzul);
+        modeloNotaAzulCarregado = false;
+    }
+}
+
 void desenharNotaGrave(float x, float z)
 {
-    DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, BLUE);
-    DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, BLUE);
+    if (modeloNotaAzulCarregado)
+    {
+        DrawModelEx(modeloNotaAzul,
+                    (Vector3){x, 0.5f, z},
+                    (Vector3){0.0f, 1.0f, 0.0f},
+                    0.0f,
+                    (Vector3){1.0f, 1.0f, 1.0f},
+                    WHITE);
+    }
+    else
+    {
+        DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, BLUE);
+        DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, BLUE);
+    }
+
     desenharGlow(x, z, BLUE);
 }
 

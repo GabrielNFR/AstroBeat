@@ -5,6 +5,7 @@
 #include "player.h"
 #include "environment.h"
 #include "notas.h"
+#include "notas_modelos.h"
 #include "score.h"
 #include "rlgl.h"
 #include "audio.h"
@@ -19,6 +20,7 @@ int main(void) {
     bool windowSizeSaved = false;
     
     InitWindow(windowedWidth, windowedHeight, "AstroBeat");
+    carregarModelosNotas();
     SetExitKey(0);
     SetTargetFPS(144);
 
@@ -314,6 +316,7 @@ int main(void) {
         }
 
         limparColetavel();
+        descarregarModelosNotas();
         descarregarCenario(&env);
         descarregarNave(&nave);
         descarregarAudio(&audio);

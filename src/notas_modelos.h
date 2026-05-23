@@ -4,6 +4,9 @@
 #include "notas.h"
 #include "raylib.h"
 
+void carregarModelosNotas(void);
+void descarregarModelosNotas(void);
+
 void desenharNotaGrave   (float x, float z);
 void desenharNotaAgudo   (float x, float z);
 void desenharNotaDireita (float x, float z);
