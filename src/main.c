@@ -124,7 +124,7 @@ int main(void) {
                             seekMusica(&audio, novoTempo);
                             tempo_inicio_musica = obterTempoMusica(&audio) - novoTempo;
                             tempo_jogo = novoTempo;
-                            printf("⏩ Skip +10s → %.1fs\n", tempo_jogo);
+                            printf("Skip +10s -> %.1fs\n", tempo_jogo);
                             fflush(stdout);
                         }
                         if (nave.buffMultiplicador && tempo_jogo >= nave.tempoFimMult) {

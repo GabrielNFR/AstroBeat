@@ -246,7 +246,7 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
         }
         else
         {
-            if (diferenca_tempo > JANELA_MISS)
+            if (diferenca_tempo > 0.6f)
             {
                 array_notas[i].finalizada = 1;
                 array_notas[i].resultado = JULG_MISS;
