@@ -101,6 +101,28 @@ const char* HitToString(Julgamento nota)
     }
 }
 
+static void desenharTextoJulgamento(const char *texto, Julgamento nota)
+{
+    int fonte = 40;
+    int largura = MeasureText(texto, fonte);
+    int screenW = GetScreenWidth();
+    int screenH = GetScreenHeight();
+    int x = screenW - largura - 220;
+    int y = screenH - 340;
+
+    Color cor;
+    switch (nota) {
+        case JULG_PERFECT: cor = GOLD;    break;
+        case JULG_GREAT:   cor = PURPLE;  break;
+        case JULG_GOOD:    cor = BLUE;    break;
+        case JULG_OK:      cor = GREEN;   break;
+        case JULG_MISS:    cor = WHITE;   break;
+        default:           cor = WHITE;   break;
+    }
+
+    DrawText(texto, x, y, fonte, cor);
+}
+
 void draw_sistema_pontos(Score*score){
     const char *texto =
     HitToString(score->ultima_nota);
@@ -116,7 +138,7 @@ void draw_sistema_pontos(Score*score){
     DrawText(TextFormat("Pontuação: %d", score->pontos),20, 20, 30, WHITE);
     DrawText(TextFormat("%d", score->streak),20, 60, 30, WHITE);
     DrawText(TextFormat("%.0fx", score->multiplicador),20, 100, 30, WHITE);
-    DrawText(HitToString(score->ultima_nota),screenWidth- larguraTexto - 20,screenHeight - 60,40,GREEN);
+    desenharTextoJulgamento(HitToString(score->ultima_nota), score->ultima_nota);
 }
 
 void draw_Resultados(Score *score){

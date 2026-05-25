@@ -7,11 +7,11 @@
 static Model modeloNotaAzul;
 static bool modeloNotaAzulCarregado = false;
 
-static void desenharGlow(float x, float z, Color cor)
-{
-    DrawSphere((Vector3){x, 0.5f, z}, 0.48f, Fade(cor, 0.12f));
-    DrawSphere((Vector3){x, 0.5f, z}, 0.36f, Fade(cor, 0.22f));
-}
+//static void desenharGlow(float x, float z, Color cor)
+//{
+//    DrawSphere((Vector3){x, 0.5f, z}, 0.48f, Fade(cor, 0.12f));
+//    DrawSphere((Vector3){x, 0.5f, z}, 0.36f, Fade(cor, 0.22f));
+//}
 
 void carregarModelosNotas(void)
 {
@@ -60,14 +60,14 @@ void desenharNotaGrave(float x, float z)
         DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, BLUE);
     }
 
-    desenharGlow(x, z, BLUE);
+    //desenharGlow(x, z, BLUE);
 }
 
 void desenharNotaAgudo(float x, float z)
 {
     DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, RED);
     DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, RED);
-    desenharGlow(x, z, RED);
+    //desenharGlow(x, z, RED);
 }
 
 void desenharNotaDireita(float x, float z)
@@ -88,7 +88,7 @@ void desenharNotaDireita(float x, float z)
         DrawCylinder((Vector3){0, 0, 0}, 0.01f, raio, comprimentoPonta, 8, GREEN);
     rlPopMatrix();
 
-    desenharGlow(x, z, GREEN);
+    //desenharGlow(x, z, GREEN);
 }
 
 void desenharNotaEsquerda(float x, float z)
@@ -109,7 +109,7 @@ void desenharNotaEsquerda(float x, float z)
         DrawCylinder((Vector3){0, 0, 0}, 0.01f, raio, comprimentoPonta, 8, YELLOW);
     rlPopMatrix();
 
-    desenharGlow(x, z, YELLOW);
+    //desenharGlow(x, z, YELLOW);
 }
 
 void desenharEfeitoAcerto(float x, float z, float tempoDecorrido, float duracaoTotal, Color cor)
