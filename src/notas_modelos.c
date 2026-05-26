@@ -6,8 +6,12 @@
 
 static Model modeloNotaAzul;
 static Model modeloNotaVermelho;
+static Model modeloNotaEsquerda;
+static Model modeloNotaDireita;
 static bool modeloNotaAzulCarregado = false;
 static bool modeloNotaVermelhoCarregado = false;
+static bool modeloNotaEsquerdaCarregado = false;
+static bool modeloNotaDireitaCarregado = false;
 
 //static void desenharGlow(float x, float z, Color cor)
 //{
@@ -39,6 +43,14 @@ void carregarModelosNotas(void)
     modeloNotaVermelho = LoadModel("assets/vermelhov3.vox");
     modeloNotaVermelhoCarregado = IsModelValid(modeloNotaVermelho);
     if (modeloNotaVermelhoCarregado) prepararModeloNota(&modeloNotaVermelho);
+
+    modeloNotaEsquerda = LoadModel("assets/esquerda.vox");
+    modeloNotaEsquerdaCarregado = IsModelValid(modeloNotaEsquerda);
+    if (modeloNotaEsquerdaCarregado) prepararModeloNota(&modeloNotaEsquerda);
+
+    modeloNotaDireita = LoadModel("assets/direita.vox");
+    modeloNotaDireitaCarregado = IsModelValid(modeloNotaDireita);
+    if (modeloNotaDireitaCarregado) prepararModeloNota(&modeloNotaDireita);
 }
 
 void descarregarModelosNotas(void)
@@ -53,6 +65,18 @@ void descarregarModelosNotas(void)
     {
         UnloadModel(modeloNotaVermelho);
         modeloNotaVermelhoCarregado = false;
+    }
+
+    if (modeloNotaEsquerdaCarregado)
+    {
+        UnloadModel(modeloNotaEsquerda);
+        modeloNotaEsquerdaCarregado = false;
+    }
+
+    if (modeloNotaDireitaCarregado)
+    {
+        UnloadModel(modeloNotaDireita);
+        modeloNotaDireitaCarregado = false;
     }
 }
 
@@ -98,6 +122,17 @@ void desenharNotaAgudo(float x, float z)
 
 void desenharNotaDireita(float x, float z)
 {
+    if (modeloNotaDireitaCarregado)
+    {
+        DrawModelEx(modeloNotaDireita,
+                    (Vector3){x, 0.5f, z},
+                    (Vector3){0.0f, 1.0f, 0.0f},
+                    0.0f,
+                    (Vector3){1.0f, 1.0f, 1.0f},
+                    WHITE);
+        return;
+    }
+
     float raio = 0.18f;
     float comprimentoCorpo = 0.50f;
     float comprimentoPonta = 0.34f;
@@ -119,6 +154,17 @@ void desenharNotaDireita(float x, float z)
 
 void desenharNotaEsquerda(float x, float z)
 {
+    if (modeloNotaEsquerdaCarregado)
+    {
+        DrawModelEx(modeloNotaEsquerda,
+                    (Vector3){x, 0.5f, z},
+                    (Vector3){0.0f, 1.0f, 0.0f},
+                    0.0f,
+                    (Vector3){1.0f, 1.0f, 1.0f},
+                    WHITE);
+        return;
+    }
+
     float raio = 0.18f;
     float comprimentoCorpo = 0.50f;
     float comprimentoPonta = 0.34f;
