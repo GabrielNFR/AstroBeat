@@ -5,7 +5,9 @@
 #include <rlgl.h>
 
 static Model modeloNotaAzul;
+static Model modeloNotaVermelho;
 static bool modeloNotaAzulCarregado = false;
+static bool modeloNotaVermelhoCarregado = false;
 
 //static void desenharGlow(float x, float z, Color cor)
 //{
@@ -13,25 +15,30 @@ static bool modeloNotaAzulCarregado = false;
 //    DrawSphere((Vector3){x, 0.5f, z}, 0.36f, Fade(cor, 0.22f));
 //}
 
+static void prepararModeloNota(Model *modelo)
+{
+    BoundingBox limites = GetModelBoundingBox(*modelo);
+    Vector3 centro = {
+        (limites.min.x + limites.max.x) / 2.0f,
+        (limites.min.y + limites.max.y) / 2.0f,
+        (limites.min.z + limites.max.z) / 2.0f
+    };
+
+    Matrix centralizar = MatrixTranslate(-centro.x, -centro.y, -centro.z);
+    Matrix escala = MatrixScale(0.085f, 0.085f, 0.085f);
+
+    modelo->transform = MatrixMultiply(centralizar, escala);
+}
+
 void carregarModelosNotas(void)
 {
-    modeloNotaAzul = LoadModel("assets/azulv1.vox");
+    modeloNotaAzul = LoadModel("assets/azulv3.vox");
     modeloNotaAzulCarregado = IsModelValid(modeloNotaAzul);
+    if (modeloNotaAzulCarregado) prepararModeloNota(&modeloNotaAzul);
 
-    if (modeloNotaAzulCarregado)
-    {
-        BoundingBox limites = GetModelBoundingBox(modeloNotaAzul);
-        Vector3 centro = {
-            (limites.min.x + limites.max.x) / 2.0f,
-            (limites.min.y + limites.max.y) / 2.0f,
-            (limites.min.z + limites.max.z) / 2.0f
-        };
-
-        Matrix centralizar = MatrixTranslate(-centro.x, -centro.y, -centro.z);
-        Matrix escala = MatrixScale(0.085f, 0.085f, 0.085f);
-
-        modeloNotaAzul.transform = MatrixMultiply(centralizar, escala);
-    }
+    modeloNotaVermelho = LoadModel("assets/vermelhov3.vox");
+    modeloNotaVermelhoCarregado = IsModelValid(modeloNotaVermelho);
+    if (modeloNotaVermelhoCarregado) prepararModeloNota(&modeloNotaVermelho);
 }
 
 void descarregarModelosNotas(void)
@@ -40,6 +47,12 @@ void descarregarModelosNotas(void)
     {
         UnloadModel(modeloNotaAzul);
         modeloNotaAzulCarregado = false;
+    }
+
+    if (modeloNotaVermelhoCarregado)
+    {
+        UnloadModel(modeloNotaVermelho);
+        modeloNotaVermelhoCarregado = false;
     }
 }
 
@@ -65,8 +78,21 @@ void desenharNotaGrave(float x, float z)
 
 void desenharNotaAgudo(float x, float z)
 {
-    DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, RED);
-    DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, RED);
+    if (modeloNotaVermelhoCarregado)
+    {
+        DrawModelEx(modeloNotaVermelho,
+                    (Vector3){x, 0.5f, z},
+                    (Vector3){0.0f, 1.0f, 0.0f},
+                    0.0f,
+                    (Vector3){1.0f, 1.0f, 1.0f},
+                    WHITE);
+    }
+    else
+    {
+        DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, RED);
+        DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, RED);
+    }
+
     //desenharGlow(x, z, RED);
 }
 
