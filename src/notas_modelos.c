@@ -3,6 +3,7 @@
 #include "raymath.h"
 #include <math.h>
 #include <rlgl.h>
+#include <stdio.h>
 
 static Model modeloNotaAzul;
 static Model modeloNotaVermelho;
@@ -13,12 +14,6 @@ static bool modeloNotaVermelhoCarregado = false;
 static bool modeloNotaEsquerdaCarregado = false;
 static bool modeloNotaDireitaCarregado = false;
 
-//static void desenharGlow(float x, float z, Color cor)
-//{
-//    DrawSphere((Vector3){x, 0.5f, z}, 0.48f, Fade(cor, 0.12f));
-//    DrawSphere((Vector3){x, 0.5f, z}, 0.36f, Fade(cor, 0.22f));
-//}
-
 static void prepararModeloNota(Model *modelo)
 {
     BoundingBox limites = GetModelBoundingBox(*modelo);
@@ -28,10 +23,14 @@ static void prepararModeloNota(Model *modelo)
         (limites.min.z + limites.max.z) / 2.0f
     };
 
-    Matrix centralizar = MatrixTranslate(-centro.x, -centro.y, -centro.z);
-    Matrix escala = MatrixScale(0.085f, 0.085f, 0.085f);
+Matrix centralizar = MatrixTranslate(-centro.x, -centro.y, -centro.z);
+Matrix escala = MatrixScale(0.085f, 0.085f, 0.085f);
 
-    modelo->transform = MatrixMultiply(centralizar, escala);
+float offsetZ = 0.20f;  
+Matrix deslocarZ = MatrixTranslate(0.0f, 0.0f, offsetZ);
+
+Matrix transform = MatrixMultiply(centralizar, deslocarZ);
+modelo->transform = MatrixMultiply(transform, escala);
 }
 
 void carregarModelosNotas(void)
@@ -93,11 +92,9 @@ void desenharNotaGrave(float x, float z)
     }
     else
     {
-        DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, BLUE);
-        DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, BLUE);
+        printf("ERRO: Modelo Nota grave falhou em carregar.");
+        return;
     }
-
-    //desenharGlow(x, z, BLUE);
 }
 
 void desenharNotaAgudo(float x, float z)
@@ -113,11 +110,9 @@ void desenharNotaAgudo(float x, float z)
     }
     else
     {
-        DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, RED);
-        DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, RED);
+        printf("ERRO: Modelo Nota aguda falhou em carregar.");
+        return;
     }
-
-    //desenharGlow(x, z, RED);
 }
 
 void desenharNotaDireita(float x, float z)
@@ -132,24 +127,11 @@ void desenharNotaDireita(float x, float z)
                     WHITE);
         return;
     }
-
-    float raio = 0.18f;
-    float comprimentoCorpo = 0.50f;
-    float comprimentoPonta = 0.34f;
-
-    rlPushMatrix();
-        rlTranslatef(x - comprimentoCorpo / 2.0f, 0.5f, z);
-        rlRotatef(-90.0f, 0, 0, 1);
-        DrawCylinder((Vector3){0, 0, 0}, raio, raio, comprimentoCorpo, 8, GREEN);
-    rlPopMatrix();
-
-    rlPushMatrix();
-        rlTranslatef(x + comprimentoCorpo / 2.0f, 0.5f, z);
-        rlRotatef(-90.0f, 0, 0, 1);
-        DrawCylinder((Vector3){0, 0, 0}, 0.01f, raio, comprimentoPonta, 8, GREEN);
-    rlPopMatrix();
-
-    //desenharGlow(x, z, GREEN);
+    else
+    {
+        printf("ERRO: Modelo Nota direita falhou em carregar.");
+        return;
+    }
 }
 
 void desenharNotaEsquerda(float x, float z)
@@ -164,24 +146,11 @@ void desenharNotaEsquerda(float x, float z)
                     WHITE);
         return;
     }
-
-    float raio = 0.18f;
-    float comprimentoCorpo = 0.50f;
-    float comprimentoPonta = 0.34f;
-
-    rlPushMatrix();
-        rlTranslatef(x - comprimentoCorpo / 2.0f, 0.5f, z);
-        rlRotatef(-90.0f, 0, 0, 1);
-        DrawCylinder((Vector3){0, 0, 0}, raio, raio, comprimentoCorpo, 8, YELLOW);
-    rlPopMatrix();
-
-    rlPushMatrix();
-        rlTranslatef(x - comprimentoCorpo / 2.0f, 0.5f, z);
-        rlRotatef(90.0f, 0, 0, 1);                     
-        DrawCylinder((Vector3){0, 0, 0}, 0.01f, raio, comprimentoPonta, 8, YELLOW);
-    rlPopMatrix();
-
-    //desenharGlow(x, z, YELLOW);
+    else
+    {
+        printf("ERRO: Modelo Nota esquerdafalhou em carregar.");
+        return;
+    }
 }
 
 void desenharEfeitoAcerto(float x, float z, float tempoDecorrido, float duracaoTotal, Color cor)

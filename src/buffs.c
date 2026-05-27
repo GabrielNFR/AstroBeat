@@ -7,6 +7,24 @@
 #include <stdio.h>    
 #include <math.h>     
 
+static void desenharGlow(float x, float z, Color cor)
+{
+    DrawSphere((Vector3){x, 0.5f, z}, 0.48f, Fade(cor, 0.12f));
+    DrawSphere((Vector3){x, 0.5f, z}, 0.36f, Fade(cor, 0.22f));
+}
+
+static void desenharColetavelJanela(float x, float z)
+{
+    DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, PURPLE);
+    DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, PURPLE);
+}
+
+static void desenharColetavelMultiplicador(float x, float z)
+{
+    DrawCylinder((Vector3){x, 0.5f, z},  0.01f, 0.35f, 0.35f, 4, GOLD);
+    DrawCylinder((Vector3){x, 0.15f, z}, 0.35f, 0.01f, 0.35f, 4, GOLD);
+}
+
 Coletavel *listaColetaveis = NULL;
 
 void inserirColetavel(float tempo, int lane, TipoBuff tipobuff, float duracao)
@@ -113,10 +131,16 @@ void desenharColetavel(float tempo_atual)
             continue;
         }
 
-        Color cor = (atual->tipobuff == BUFF_MULTIPLICADOR) ? GOLD : PURPLE;
-        float y = 1.0f + sinf(tempo_atual * 4.0f) * 0.2f;
-
-        DrawSphere((Vector3){x, y, z}, 0.3f, Fade(cor, 0.7f));
+        if (atual->tipobuff == BUFF_MULTIPLICADOR)
+        {
+            desenharColetavelMultiplicador(x, z);
+            desenharGlow(x, z, GOLD);
+        }
+        else if (atual->tipobuff == BUFF_JANELA)
+        {
+            desenharColetavelJanela(x, z);
+            desenharGlow(x, z, PURPLE);
+        }
 
         atual = atual->proximo;
     }
