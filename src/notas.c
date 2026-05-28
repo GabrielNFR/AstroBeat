@@ -213,6 +213,8 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
 {
     bool hitPorTipo[5] = {0};
 
+    int ganhoStreak =jogador->buffMultiplicador ? 2 : 1;
+
     float janela_perfect = JANELA_PERFECT + (jogador->buffJanela ? 0.020f : 0.0f);
     float janela_great   = JANELA_GREAT   + (jogador->buffJanela ? 0.020f : 0.0f);
     float janela_good    = JANELA_GOOD    + (jogador->buffJanela ? 0.020f : 0.0f);
@@ -273,30 +275,33 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
                     array_notas[i].mostrarEfeito = 1;
                     array_notas[i].tempoAcerto = tempo_atual;
                     array_notas[i].pontos = jogador->buffMultiplicador ? 200 : 100;
-                    if (jogador->buffMultiplicador) printf("2x PONTOS\n");
+                    if (jogador->buffMultiplicador) {
+                        aumentar_streak(score,ganhoStreak);
+                        adicionar_pontos(score,JULG_PERFECT, array_notas[i].pontos);
+                    };
 
                     if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_PERFECT, array_notas[i].pontos);
                         printf("PERFECT\n");
                     } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_GREAT, array_notas[i].pontos);
                         printf("GREAT\n");
                     } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_GOOD, array_notas[i].pontos);
                         printf("GOOD\n");
                     } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_OK, array_notas[i].pontos);
                         printf("OK\n");
                     }
@@ -319,25 +324,25 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
                     if (diferenca_absoluta <= janela_perfect) {
                         array_notas[i].resultado = JULG_PERFECT;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_PERFECT, array_notas[i].pontos);
                         printf("LONG HEAD PERFECT\n");
                     } else if (diferenca_absoluta <= janela_great) {
                         array_notas[i].resultado = JULG_GREAT;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_GREAT, array_notas[i].pontos);
                         printf("LONG HEAD GREAT\n");
                     } else if (diferenca_absoluta <= janela_good) {
                         array_notas[i].resultado = JULG_GOOD;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_GOOD, array_notas[i].pontos);
                         printf("LONG HEAD GOOD\n");
                     } else if (diferenca_absoluta <= janela_ok) {
                         array_notas[i].resultado = JULG_OK;
                         registrarAcerto(score,array_notas[i].tipo);
-                        aumentar_streak(score);
+                        aumentar_streak(score,ganhoStreak);
                         adicionar_pontos(score,JULG_OK, array_notas[i].pontos);
                         printf("LONG HEAD OK\n");
                     }
@@ -361,7 +366,7 @@ void verificarAcertos(Nave *jogador,Score *score, float tempo_atual, float delta
             else if (tempo_atual >= tempo_fim)
             {
                 array_notas[i].finalizada = 1;
-                aumentar_streak(score);
+                aumentar_streak(score,ganhoStreak);
                 adicionar_pontos(score,JULG_GREAT,50);
                 printf("LONG COMPLETA\n");
                 fflush(stdout);

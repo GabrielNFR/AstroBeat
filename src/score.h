@@ -5,7 +5,7 @@
 
 extern const char *nomesColunas[TOTAL_COLUNAS];
 
-void aumentar_streak(Score *score);
+void aumentar_streak(Score *score,int valor);
 void adicionar_pontos(Score *score,Julgamento nota,int pontosBase);
 void errar_nota(Score * score);
 void draw_sistema_pontos(Score *score);

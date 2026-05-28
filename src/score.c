@@ -49,8 +49,8 @@ float multiplicador_streak(int streak){
 
     return 1.0f;
 }
-void aumentar_streak(Score *score){
-    score->streak++;
+void aumentar_streak(Score *score,int valor){
+    score->streak+=valor;
     
     if (score->streak > score->maior_streak){
         score->maior_streak=score->streak;
@@ -124,20 +124,35 @@ static void desenharTextoJulgamento(const char *texto, Julgamento nota)
 }
 
 void draw_sistema_pontos(Score*score){
-    const char *texto =
-    HitToString(score->ultima_nota);
+    const char *texto = HitToString(score->ultima_nota);
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+    float pulse =sinf(GetTime() * 8.0f) * 5.0f;
+    int tamanhoMult = 40 + pulse;
+
+    Color corMultiplicador = GREEN;
+    Color multColor = (Color){0, 255, 255, 255};
+    Color multColor2 = (Color){255, 0, 200, 255};
+    Color fogo ={255,100 + (int)(sinf(GetTime() * 10) * 80),0,255};
+
+    if(score->multiplicador==2){
+        corMultiplicador = multColor;
+    }
+    else if(score->multiplicador==4){
+        corMultiplicador = BLUE;
+    }
+     if(score->multiplicador==8){
+        tamanhoMult = 40 + sinf(GetTime() * 8.0f) * 5.0f;
+        corMultiplicador =(Color){255,140 + (int)(sinf(GetTime() * 12) * 60),0,255};
+    }
 
     int fonte = 40;
 
-    int larguraTexto =
-    MeasureText(texto, fonte);
+    int larguraTexto =MeasureText(texto, fonte);
 
-    int screenWidth = GetScreenWidth();
-    int screenHeight = GetScreenHeight();
-
-    DrawText(TextFormat("Pontuação: %d", score->pontos),20, 20, 30, WHITE);
-    DrawText(TextFormat("%d", score->streak),20, 60, 30, WHITE);
-    DrawText(TextFormat("%.0fx", score->multiplicador),20, 100, 30, WHITE);
+    DrawText(TextFormat("Pontuação: %d", score->pontos),20, 20, 30, multColor2);
+    DrawText(TextFormat("%d", score->streak),140, screenHeight -115, 40, YELLOW);
+    DrawText(TextFormat("%.0fx", score->multiplicador),140, screenHeight - 70,  tamanhoMult, corMultiplicador);
     desenharTextoJulgamento(HitToString(score->ultima_nota), score->ultima_nota);
 }
 
@@ -151,8 +166,7 @@ void draw_Resultados(Score *score){
 
     int tituloSize = 40;
 
-    int larguraTitulo =
-        MeasureText(titulo, tituloSize);
+    int larguraTitulo =MeasureText(titulo, tituloSize);
 
     DrawText(
         titulo,
@@ -189,8 +203,7 @@ void draw_Resultados(Score *score){
 
     int textoSize = 20;
 
-    int larguraTexto =
-        MeasureText(texto, textoSize);
+    int larguraTexto = MeasureText(texto, textoSize);
 
     DrawText(texto,screenWidth - larguraTexto - 20, screenHeight - 40, textoSize, GRAY);
 }
