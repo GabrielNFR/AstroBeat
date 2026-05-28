@@ -10,11 +10,9 @@ const char *nomesLinhas[TOTAL_LINHAS] = {
     "GRAVE",
     "AGUDO",
     "LONGA",
-    "MOVIMENTO",
+    "MOVE",
     "GERAL"
 };
-
-int teste = TOTAL_COLUNAS;
 
 const char *nomesColunas[TOTAL_COLUNAS] = {"TOTAL","ACERTOS","MISS","PRECISAO"};
 
@@ -150,7 +148,7 @@ void draw_sistema_pontos(Score*score){
 
     int larguraTexto =MeasureText(texto, fonte);
 
-    DrawText(TextFormat("Pontuação: %d", score->pontos),20, 20, 30, multColor2);
+    DrawText(TextFormat("Pontuação: %d", score->pontos),20, 40, 30, multColor2);
     DrawText(TextFormat("%d", score->streak),140, screenHeight -115, 40, YELLOW);
     DrawText(TextFormat("%.0fx", score->multiplicador),140, screenHeight - 70,  tamanhoMult, corMultiplicador);
     desenharTextoJulgamento(HitToString(score->ultima_nota), score->ultima_nota);
@@ -168,24 +166,24 @@ void draw_Resultados(Score *score){
 
     int larguraTitulo =MeasureText(titulo, tituloSize);
 
-    DrawText(
-        titulo,
-        (screenWidth - larguraTitulo)/2,40,tituloSize,WHITE);
+    DrawText(titulo,(screenWidth - larguraTitulo)/2,40,tituloSize,WHITE);
     
-    int startX = 180;
-    int startY = 120;
+    int cellWidth = 110;
+    int cellHeight = 45;
+    int larguraTabela = (TOTAL_COLUNAS + 1) * cellWidth;
+    int alturaTabela = (TOTAL_LINHAS + 1) * cellHeight;
+    int startX =  (screenWidth - larguraTabela) / 2 + cellWidth;;
+    int startY = (screenHeight - alturaTabela) / 2;
 
-    int cellWidth = 140;
-    int cellHeight = 40;
     DrawText("TIPO",startX - 140,startY,20,WHITE);
-
+    
     for(int col = 0;col < TOTAL_COLUNAS;col++){
         DrawText(nomesColunas[col],startX + (col * cellWidth),startY,20,WHITE); 
     }
-
+    
     for(int lin = 0;lin < TOTAL_LINHAS;lin++){
         DrawText(nomesLinhas[lin],startX - 140,startY + ((lin + 1) * cellHeight),20,WHITE);
-
+        
         for(int col = 0;col < TOTAL_COLUNAS;col++){
             float valor =score->matrizResultados[lin][col];
             if(col == COL_PRECISAO){
@@ -196,10 +194,41 @@ void draw_Resultados(Score *score){
             DrawText(TextFormat("%.0f", valor),startX + (col * cellWidth),startY + ((lin + 1) * cellHeight),20,WHITE);
         }
     }
+    } 
+
+    float precisaoGeral =score->matrizResultados[LINHA_GERAL][COL_PRECISAO];
+    float pulse =sinf(GetTime() * 8.0f) * 5.0f;
+    int tamanhoRank = 120 + pulse;
+
+    const char *ranking = "F";
+    Color corRanking = RED;
+
+    if (precisaoGeral >= 90){
+        ranking = "S";
+        corRanking = GOLD;
+    }
+    else if (precisaoGeral >= 80){
+        ranking = "A";
+        corRanking = PURPLE;
+    }
+    else if (precisaoGeral >= 70){
+        ranking = "B";
+        corRanking = BLUE;
+    }
+    else if (precisaoGeral >= 60){
+        ranking = "C";
+        corRanking = YELLOW;
+    }
+    else if (precisaoGeral >= 50){
+        ranking = "D";
+        corRanking = ORANGE;
     }
 
-    const char *texto =
-        "APERTE ENTER PARA VOLTAR AO MENU";
+    DrawText("RANK",screenWidth - 220,100,30,GRAY);
+
+    DrawText(ranking,screenWidth - 220,140,tamanhoRank,corRanking);
+
+    const char *texto = "APERTE ENTER PARA VOLTAR AO MENU";
 
     int textoSize = 20;
 

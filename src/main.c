@@ -294,8 +294,12 @@ int main(void) {
                         break;
 
                     case RESULTS:
-                        ClearBackground(BLACK);
-
+                         BeginMode3D(cameraBG);
+                            rlDisableDepthTest();
+                            desenharFundo(&env);
+                            rlEnableDepthTest();
+                        EndMode3D();
+                        
                         draw_Resultados(&score);
 
                         break;
