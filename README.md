@@ -1,5 +1,9 @@
 # AstroBeat
 
+<p align="center">
+  <img src="assets/astrobeat.png" alt="Logo do AstroBeat" width="720">
+</p>
+
 ## Descrição
 
 **AstroBeat** é um jogo rítmico 3D de alta velocidade no estilo corrida de corredor infinito (endless runner).
