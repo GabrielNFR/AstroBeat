@@ -8,6 +8,14 @@ O jogador pilota uma nave espacial através de uma pista neon intergaláctica di
 
 ---
 
+## Demonstração
+
+[![Vídeo de demonstração do AstroBeat](https://img.youtube.com/vi/OBFhsgefYEo/hqdefault.jpg)](https://youtu.be/OBFhsgefYEo)
+
+Assista ao vídeo de demonstração executando o jogo: https://youtu.be/OBFhsgefYEo
+
+---
+
 ## Instalação, compilação e execução
 
 ### Pré-requisitos
