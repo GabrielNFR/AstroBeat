@@ -140,7 +140,7 @@ void draw_sistema_pontos(Score*score){
         corMultiplicador = BLUE;
     }
      if(score->multiplicador==8){
-        tamanhoMult = 40 + sinf(GetTime() * 8.0f) * 5.0f;
+        tamanhoMult = 80 + sinf(GetTime() * 8.0f) * 5.0f;
         corMultiplicador =(Color){255,140 + (int)(sinf(GetTime() * 12) * 60),0,255};
     }
 
