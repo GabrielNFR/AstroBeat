@@ -1,10 +1,22 @@
 # AstroBeat
 
+<p align="center">
+  <img src="assets/astrobeat.png" alt="Logo do AstroBeat" width="720">
+</p>
+
 ## Descrição
 
 **AstroBeat** é um jogo rítmico 3D de alta velocidade no estilo corrida de corredor infinito (endless runner).
 
 O jogador pilota uma nave espacial através de uma pista neon intergaláctica dividida em três faixas. O objetivo principal é reagir aos obstáculos e às notas musicais que se aproximam na velocidade e no ritmo correto da música, alternando rapidamente entre as faixas esquerda, central e direita para desviar de perigos ou coletar notas musicais.
+
+---
+
+## Demonstração
+
+[![Vídeo de demonstração do AstroBeat](https://img.youtube.com/vi/OBFhsgefYEo/hqdefault.jpg)](https://youtu.be/OBFhsgefYEo)
+
+Assista ao vídeo de demonstração executando o jogo: https://youtu.be/OBFhsgefYEo
 
 ---
 

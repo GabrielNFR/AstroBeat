@@ -273,6 +273,18 @@ int main(void) {
                             desenharColetavel(tempo_jogo);
                         EndMode3D();
                         draw_sistema_pontos(&score);
+
+                        if (nave.buffMultiplicador) {
+                            float tempoRestante = nave.tempoFimMult - tempo_jogo;
+                            DrawText("2x PONTOS", 20, 140, 20, GOLD);
+                            DrawText(TextFormat("(%.1fs)", tempoRestante), 20, 165, 16, Fade(GOLD, 0.6f));
+                        }
+                        if (nave.buffJanela) {
+                            float tempoRestante = nave.tempoFimJanela - tempo_jogo;
+                            DrawText("JANELA +20ms", 20, 190, 20, PURPLE);
+                            DrawText(TextFormat("(%.1fs)", tempoRestante), 20, 215, 16, Fade(PURPLE, 0.6f));
+                        }
+
                         DrawFPS(10, 10);
                         break;
 
