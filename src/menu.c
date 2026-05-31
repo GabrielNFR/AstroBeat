@@ -15,7 +15,7 @@ const SongInfo songList[] = {
     {"Elektronomia", "songs/Elektronomia.ogg", "mapasMusicas/mapaElektronomia.txt", "mapasColetaveis/mapaElektronomia.txt"},
     {"Spektrem", "songs/Spektrem.mp3", "mapasMusicas/mapaSpektrem.txt", "mapasColetaveis/mapaSpektrem.txt"},
     {"DK Invincible", "songs/DKInvincible.mp3", "mapasMusicas/mapaDKInvincible.txt", "mapasColetaveis/mapaDKInvincible.txt"},
-    {"Dancefloor Dreamer", "songs/Dancefloor Dreamer.mp3", "mapasMusicas/mapaDancefloorDreamer.txt", NULL},
+    {"Dancefloor Dreamer", "songs/Dancefloor Dreamer.mp3", "mapasMusicas/mapaDancefloorDreamer.txt", "mapasColetaveis/mapaDancefloorDreamer.txt"},
     {"Teste", NULL, NULL, NULL}
 };
 

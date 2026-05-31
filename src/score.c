@@ -126,7 +126,7 @@ void draw_sistema_pontos(Score*score){
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
     float pulse =sinf(GetTime() * 8.0f) * 5.0f;
-    int tamanhoMult = 40 + pulse;
+    int tamanhoMult = 80 + pulse;
 
     Color corMultiplicador = GREEN;
     Color multColor = (Color){0, 255, 255, 255};
@@ -148,9 +148,9 @@ void draw_sistema_pontos(Score*score){
 
     int larguraTexto =MeasureText(texto, fonte);
 
-    DrawText(TextFormat("Pontuação: %d", score->pontos),20, 40, 30, multColor2);
-    DrawText(TextFormat("%d", score->streak),140, screenHeight -115, 40, YELLOW);
-    DrawText(TextFormat("%.0fx", score->multiplicador),140, screenHeight - 70,  tamanhoMult, corMultiplicador);
+    DrawText(TextFormat("Pontuação: %d", score->pontos),20, 40, 40, multColor2);
+    DrawText(TextFormat("%d", score->streak),140, screenHeight -135, 40, YELLOW);
+    DrawText(TextFormat("%.0fx", score->multiplicador),140, screenHeight - 90,  tamanhoMult, corMultiplicador);
     desenharTextoJulgamento(HitToString(score->ultima_nota), score->ultima_nota);
 }
 
